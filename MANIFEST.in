@@ -1,0 +1,11 @@
+include dash_gantt/dash_gantt.min.js
+include dash_gantt/dash_gantt.min.js.map
+include dash_gantt/async-*.js
+include dash_gantt/async-*.js.map
+include dash_gantt/*-shared.js
+include dash_gantt/*-shared.js.map
+include dash_gantt/metadata.json
+include dash_gantt/package-info.json
+include README.md
+include LICENSE
+include package.json

@@ -1,0 +1,271 @@
+/* Base styles */
+.dash-gantt {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    border: 0.0625em solid #e2e8f0;  /* 1px */
+    border-radius: 0.25em;           /* 4px */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    font-size: 16px;                 /* Base font size for em calculations */
+}
+
+/* Header container styles */
+.dash-gantt-header-container {
+    display: flex;
+    border-bottom: 0.0625em solid #e2e8f0;
+    background-color: #f8fafc;
+    flex-shrink: 0;
+    height: 3em;                     /* 48px */
+}
+
+.dash-gantt-title {
+    width: 15.625em;                 /* 250px */
+    padding: 0.75em 1em;
+    font-weight: 600;
+    border-right: 0.0625em solid #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
+/* Content styles updated with ems */
+.dash-gantt-jobs {
+    width: 15.625em;                 /* 250px */
+    flex-shrink: 0;
+    border-right: 0.0625em solid #e2e8f0;
+}
+
+.dash-gantt-job-row {
+    height: 3em;                     /* 48px */
+    border-bottom: 0.0625em solid #e2e8f0;
+}
+
+/* Task bar styles */
+.dash-gantt-task-bar {
+    height: 2em;                     /* 32px */
+    top: 0.5em;                      /* 8px */
+    border-radius: 0.25em;           /* 4px */
+    font-size: 0.875em;              /* 14px */
+}
+
+/* Icons and controls */
+.dash-gantt-caret {
+    width: 1em;
+    height: 1em;
+    font-size: 1em;
+}
+
+.dash-gantt-job-icon {
+    width: 1em;
+    height: 1em;
+}
+
+/* Scrollbar styling */
+.dash-gantt *::-webkit-scrollbar {
+    width: 0.5em;                    /* 8px */
+    height: 0.5em;
+}
+
+.dash-gantt *::-webkit-scrollbar-thumb {
+    border-radius: 0.25em;           /* 4px */
+}/* Base styles */
+.dash-gantt {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Header container styles */
+.dash-gantt-header-container {
+    display: flex;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+    flex-shrink: 0;
+    height: 48px;
+}
+
+.dash-gantt-title {
+    width: 250px;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border-right: 1px solid #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;  /* Include padding in width calculation */
+}
+
+.dash-gantt-header-timeline {
+    flex-grow: 1;
+    overflow: hidden;
+    border-left: 1px solid #e2e8f0;
+    margin-left: -1px; /* Prevent double border */
+}
+
+/* Content container */
+.dash-gantt-content {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Left column styles */
+.dash-gantt-jobs {
+    width: 250px;
+    flex-shrink: 0;
+    border-right: 1px solid #e2e8f0;
+    overflow-y: auto;
+    background: white;
+    box-sizing: border-box;  /* Include border in width calculation */
+}
+
+.dash-gantt-job-row {
+    height: 48px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0;  /* Remove default padding */
+}
+
+.dash-gantt-job-title {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;  /* Move padding here */
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.dash-gantt-job-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding-left: 24px;  /* Base indentation for all items */
+}
+
+/* Timeline styles */
+.dash-gantt-timeline {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.dash-gantt-timeline-scroll {
+    overflow: auto;
+    height: 100%;
+}
+
+.dash-gantt-timeline-header {
+    display: flex;
+    height: 48px;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.dash-gantt-time-cell {
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #e2e8f0;
+    font-size: 0.875rem;
+    background: white;
+}
+
+.dash-gantt-timeline-content {
+    position: relative;
+}
+
+.dash-gantt-timeline-row {
+    height: 48px;
+    border-bottom: 1px solid #e2e8f0;
+    position: relative;
+}
+
+/* Task bar styles */
+.dash-gantt-task-bar {
+    position: absolute;
+    height: 32px;
+    top: 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    z-index: 1;
+}
+
+.dash-gantt-task-bar:hover {
+    opacity: 0.9;
+}
+
+/* Current time indicator */
+.dash-gantt-current-time {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #ef4444;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Icons and controls */
+.dash-gantt-caret {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    color: #666;
+}
+
+.dash-gantt-job-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.dash-gantt-job-name {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Scrollbar styling */
+.dash-gantt *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dash-gantt *::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.dash-gantt *::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.dash-gantt *::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
