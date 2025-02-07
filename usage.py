@@ -69,25 +69,6 @@ data = [
     },
 ]
 
-# Sample line graph data showing memory usage over time
-# line_graph_data = {
-#     "Memory Usage": {
-#         "dates": [
-#             "2023-10-01 14:00", "2023-10-01 14:10", 
-#             "2023-10-01 14:20", "2023-10-01 14:30"
-#         ],
-#         "values": [20, 45, 75, 95],
-#         "color": "#4CAF50"
-#     },
-#     "Task Usage": {
-#         "dates": [
-#             "2023-10-01 14:45", "2023-10-01 14:50", "2023-10-01 14:55", "2023-10-01 15:00"
-#         ],
-#         "values": [30, 60, 80, 85],
-#         "color": "#2196F3"
-#     }
-# }
-
 app.layout = html.Div([
     dash_gantt.DashGantt(
         id='gantt-chart',
@@ -116,7 +97,7 @@ app.layout = html.Div([
         maxHeight="600px",
         styles={
             "container": {"color": "black"}
-        }
+        },
     )
 ])
 

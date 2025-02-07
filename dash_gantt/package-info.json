@@ -25,11 +25,13 @@
   "license": "MIT",
   "dependencies": {
     "moment": "^2.29.4",
+    "css-loader": "^6.8.1",
     "prop-types": "^15.8.1",
     "ramda": "^0.26.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "recharts": "^2.15.1"
+    "recharts": "^2.15.1",
+    "style-loader": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
