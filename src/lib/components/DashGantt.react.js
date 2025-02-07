@@ -21,6 +21,8 @@ export default class DashGantt extends Component {
         this.timelineRef = React.createRef();
     }
 
+    // #region Component Lifecycle
+
     componentDidMount() {
         this.updateCurrentTimePosition();
     }
@@ -31,6 +33,10 @@ export default class DashGantt extends Component {
             this.updateCurrentTimePosition();
         }
     }
+
+    // #endregion
+
+    // #region Helper Methods
 
     /**
      * Calculates and updates the position of the current time indicator
@@ -62,184 +68,6 @@ export default class DashGantt extends Component {
                 [id]: !prevState.expandedRows[id],
             },
         }));
-    };
-
-    /**
-     * Renders a job title with appropriate indentation and controls
-     * @param {Object} item - Job data item
-     * @param {number} level - Hierarchy level for indentation
-     */
-    renderJobTitle = (item, level) => {
-        return (
-            <div className="dash-gantt-job-title">
-                <div 
-                    className="dash-gantt-job-content"
-                    style={{ paddingLeft: `${(level + 1) * 24}px` }}  // Increase indentation based on level
-                >
-                    {item.children && (
-                        <button
-                            onClick={() => this.toggleRow(item.id)}
-                            className="dash-gantt-caret"
-                            aria-label={this.state.expandedRows[item.id] ? "Collapse" : "Expand"}
-                        >
-                            {this.state.expandedRows[item.id] ? '▼' : '►'}
-                        </button>
-                    )}
-                    {item.icon && (
-                        <img 
-                            src={item.icon} 
-                            alt="" 
-                            className="dash-gantt-job-icon"
-                        />
-                    )}
-                    <span className="dash-gantt-job-name">{item.name}</span>
-                </div>
-            </div>
-        );
-    };
-
-    /**
-     * Recursively renders the hierarchical job list
-     * @param {Array} items - Array of job items
-     * @param {number} level - Current hierarchy level
-     */
-    renderHierarchicalData = (items, level = 0) => {
-        return items.map((item) => (
-            <React.Fragment key={item.id}>
-                <div className="dash-gantt-job-row">
-                    {this.renderJobTitle(item, level)}
-                </div>
-                {item.children && this.state.expandedRows[item.id] && 
-                    this.renderHierarchicalData(item.children, level + 1)}
-            </React.Fragment>
-        ));
-    };
-
-    /**
-     * Generates time intervals for the timeline header
-     * @returns {Array} Array of moment.js objects representing time intervals
-     */
-    generateTimeIntervals = () => {
-        const { startDate, endDate, timeScale } = this.props;
-        const start = moment(startDate);
-        const end = moment(endDate);
-        const intervals = [];
-        
-        let current = start.clone();
-        while (current <= end) {
-            intervals.push(current.clone());
-            current.add(timeScale.value, timeScale.unit);
-        }
-        
-        return intervals;
-    };
-
-    /**
-     * Renders the timeline header with date/time intervals
-     */
-    renderTimelineHeader = () => {
-        const intervals = this.generateTimeIntervals();
-        return (
-            <div className="dash-gantt-timeline-header">
-                {intervals.map((interval, index) => (
-                    <div 
-                        key={index}
-                        className="dash-gantt-time-cell"
-                        style={{ width: this.props.columnWidth }}
-                    >
-                        {interval.format(this.props.timeScale.format)}
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
-    /**
-     * Renders a bar representing a task in the timeline
-     * @param {Object} item - Task data
-     * @param {number} position - Calculated left position percentage
-     * @param {number} width - Calculated width percentage
-     */
-    renderBar = (item, position, width) => {
-        const color = this.getItemColor(item);
-        const tooltipContent = this.generateTooltip(item);
-        
-        return (
-            <div
-                className="dash-gantt-task-bar"
-                style={{
-                    left: `${position}%`,
-                    width: `${width}%`,
-                    backgroundColor: color,
-                }}
-                title={tooltipContent}
-            >
-                {item.label || ''}
-            </div>
-        );
-    };
-
-    /**
-     * Renders a line chart for time series data
-     * @param {Object} item - Task data
-     * @param {Object} data - Line chart data
-     */
-    renderLineChart = (item, data) => {
-        return (
-            <div className="dash-gantt-line-chart">
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={data}>
-                        <Line 
-                            type="monotone"
-                            dataKey="value"
-                            stroke={item.color}
-                            fill={item.color}
-                            fillOpacity={0.3}
-                            dot={false}
-                        />
-                        <YAxis domain={[0, 100]} hide />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-        );
-    };
-
-    /**
-     * Renders the current time indicator line
-     */
-    renderCurrentTimeLine = () => {
-        if (!this.props.currentTime) return null;
-        return (
-            <div 
-                className="dash-gantt-current-time"
-                style={{ left: `${this.state.currentTimePosition}%` }}
-            />
-        );
-    };
-
-    /**
-     * Renders all timeline content including bars and line charts
-     * @param {Array} items - Array of job items
-     * @param {number} level - Current hierarchy level
-     */
-    renderTimelineContent = (items, level = 0) => {
-        return items.map((item) => (
-            <React.Fragment key={item.id}>
-                <div className="dash-gantt-timeline-row">
-                    {item.start && item.end && this.renderBar(
-                        item,
-                        this.calculatePosition(item.start) + (level * 4), // Add indentation
-                        this.calculateWidth(item.start, item.end) - (level * 4) // Adjust width for indentation
-                    )}
-                    {this.props.lineGraphData?.[item.id] && this.renderLineChart(
-                        item,
-                        this.props.lineGraphData[item.id]
-                    )}
-                </div>
-                {item.children && this.state.expandedRows[item.id] && 
-                    this.renderTimelineContent(item.children, level + 1)}
-            </React.Fragment>
-        ));
     };
 
     /**
@@ -295,8 +123,244 @@ export default class DashGantt extends Component {
             .join('\n');
     };
 
+    /**
+     * Generates time intervals for the timeline header
+     * @returns {Array} Array of moment.js objects representing time intervals
+     */
+    generateTimeIntervals = () => {
+        const { startDate, endDate, timeScale, columnWidth } = this.props;
+        const start = moment(startDate);
+        const end = moment(endDate);
+        
+        // Calculate total duration and number of intervals
+        const totalDuration = end.diff(start, timeScale.unit);
+        const numberOfIntervals = Math.ceil(totalDuration / timeScale.value);
+        
+        // Use a fixed total width if ref isn't available
+        const totalWidth = numberOfIntervals * columnWidth;
+        
+        // Generate intervals with fixed width
+        let intervals = [];
+        let current = start.clone();
+        while (current <= end) {
+            intervals.push({
+                date: current.clone(),
+                width: columnWidth
+            });
+            current.add(timeScale.value, timeScale.unit);
+        }
+        
+        return intervals;
+    };
+
+    // #endregion
+
+    // #region Render Fuctions
+
+    /**
+     * Renders a job title with appropriate indentation and controls
+     * @param {Object} item - Job data item
+     * @param {number} level - Hierarchy level for indentation
+     */
+    renderJobTitle = (item, level) => {
+        return (
+            <div className="dash-gantt-job-title">
+                <div 
+                    className="dash-gantt-job-content"
+                    style={{ paddingLeft: `${(level + 1) * 24}px` }}  // Increase indentation based on level
+                >
+                    {item.children && (
+                        <button
+                            onClick={() => this.toggleRow(item.id)}
+                            className="dash-gantt-caret"
+                            aria-label={this.state.expandedRows[item.id] ? "Collapse" : "Expand"}
+                        >
+                            {this.state.expandedRows[item.id] ? '▼' : '►'}
+                        </button>
+                    )}
+                    {item.icon && (
+                        <img 
+                            src={item.icon} 
+                            alt="" 
+                            className="dash-gantt-job-icon"
+                        />
+                    )}
+                    <span className="dash-gantt-job-name">{item.name}</span>
+                </div>
+            </div>
+        );
+    };
+
+    /**
+     * Recursively renders the hierarchical job list
+     * @param {Array} items - Array of job items
+     * @param {number} level - Current hierarchy level
+     */
+    renderHierarchicalData = (items, level = 0) => {
+        return items.map((item) => (
+            <React.Fragment key={item.id}>
+                <div className="dash-gantt-job-row">
+                    {this.renderJobTitle(item, level)}
+                </div>
+                {item.children && this.state.expandedRows[item.id] && 
+                    this.renderHierarchicalData(item.children, level + 1)}
+            </React.Fragment>
+        ));
+    };
+
+    /**
+     * Renders the timeline header with date/time intervals
+     */
+    renderTimelineHeader = () => {
+        const intervals = this.generateTimeIntervals();
+        return (
+            <div className="dash-gantt-timeline-header">
+                {intervals.map((interval, index) => (
+                    <div 
+                        key={index}
+                        className="dash-gantt-time-cell"
+                        style={{ width: interval.width }}
+                    >
+                        {interval.date.format(this.props.timeScale.format)}
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
+    /**
+     * Renders a bar representing a task in the timeline
+     * @param {Object} item - Task data
+     * @param {number} position - Calculated left position percentage
+     * @param {number} width - Calculated width percentage
+     */
+    renderBar = (item, position, width) => {
+        const color = this.getItemColor(item);
+        const tooltipContent = this.generateTooltip(item);
+        
+        return (
+            <div
+                className="dash-gantt-task-bar"
+                style={{
+                    left: `${position}%`,
+                    width: `${width}%`,
+                    backgroundColor: color,
+                }}
+                title={tooltipContent}
+            >
+                {item.label || ''}
+            </div>
+        );
+    };
+
+    /**
+     * Renders a line chart for time series data
+     * @param {Object} item - Task data
+     * @param {Object} data - Line chart data
+     */
+    renderLineChart = (item, data) => {
+        const { startDate, endDate } = this.props;
+        const componentStart = moment(startDate);
+        const componentEnd = moment(endDate);
+        
+        // Filter data points to only those within the timeline range
+        const filteredData = data.dates.map((date, index) => ({
+            date: moment(date),
+            value: data.values[index]
+        })).filter(point => {
+            return point.date >= componentStart && point.date <= componentEnd;
+        });
+    
+        // Calculate position and width based on date range
+        const startPos = this.calculatePosition(filteredData[0].date);
+        const endPos = this.calculatePosition(filteredData[filteredData.length - 1].date);
+        const width = endPos - startPos;
+    
+        return (
+            <div 
+                className="dash-gantt-line-chart"
+                style={{
+                    position: 'absolute',
+                    left: `${startPos}%`,
+                    width: `${width}%`
+                }}
+            >
+                <ResponsiveContainer width="100%" height={40}>
+                    <LineChart data={filteredData}>
+                        <Line 
+                            type="monotone"
+                            dataKey="value"
+                            stroke={data.color}
+                            fill={data.color}
+                            fillOpacity={0.3}
+                            dot={false}
+                            isAnimationActive={false}
+                        />
+                        <YAxis domain={[0, 100]} hide />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+        );
+    };
+
+    /**
+     * Renders the current time indicator line
+     */
+    renderCurrentTimeLine = () => {
+        if (!this.props.currentTime) return null;
+        return (
+            <div 
+                className="dash-gantt-current-time"
+                style={{ left: `${this.state.currentTimePosition}%` }}
+            />
+        );
+    };
+
+    /**
+     * Renders all timeline content including bars and line charts
+     * @param {Array} items - Array of job items
+     * @param {number} level - Current hierarchy level
+     */
+    renderTimelineContent = (items, level = 0) => {
+        console.log("Rendering timeline content for items:", items);
+        return items.map((item) => {
+            console.log("Processing item:", item);
+            if (item.displayType === 'line') {
+                console.log("Rendering line chart for:", item.name);
+            } else if (item.start && item.end) {
+                console.log("Rendering bar for:", item.name);
+                console.log("Position:", this.calculatePosition(item.start));
+                console.log("Width:", this.calculateWidth(item.start, item.end));
+            }
+    
+            return (
+                <React.Fragment key={item.id}>
+                    <div className="dash-gantt-timeline-row">
+                        {item.displayType === 'line' ? (
+                            this.renderLineChart(item, {
+                                dates: item.dates,
+                                values: item.values,
+                                color: item.color
+                            })
+                        ) : (
+                            item.start && item.end && this.renderBar(
+                                item,
+                                this.calculatePosition(item.start) + (level * 4),
+                                this.calculateWidth(item.start, item.end) - (level * 4)
+                            )
+                        )}
+                    </div>
+                    {item.children && this.state.expandedRows[item.id] && 
+                        this.renderTimelineContent(item.children, level + 1)}
+                </React.Fragment>
+            );
+        });
+    };
+
     render() {
         const { id, data, title, maxHeight, styles, className } = this.props;
+        const intervals = this.generateTimeIntervals();
+        const totalWidth = intervals.reduce((sum, interval) => sum + interval.width, 0);
     
         return (
             <div 
@@ -304,10 +368,7 @@ export default class DashGantt extends Component {
                 className={`dash-gantt ${className?.container || ''}`}
                 style={{ maxHeight, ...(styles?.container || {}) }}
             >
-                <div 
-                    className={`dash-gantt-header-container ${className?.header || ''}`}
-                    style={styles?.header}
-                >
+                <div className="dash-gantt-header-container">
                     <div className="dash-gantt-title">
                         {title}
                     </div>
@@ -329,28 +390,46 @@ export default class DashGantt extends Component {
                             onScroll={this.handleTimelineScroll}
                             ref={this.timelineRef}
                         >
-                            {this.renderCurrentTimeLine()}
-                            {this.renderTimelineContent(data)}
+                            <div 
+                                className="dash-gantt-timeline-wrapper"
+                                style={{ width: Math.max(totalWidth, '100%') }}
+                            >
+                                {this.renderCurrentTimeLine()}
+                                {this.renderTimelineContent(data)}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         );
     }
+
+    // #endregion
 }
 
 DashGantt.propTypes = {
     /** Optional(str): The ID used to identify this component in Dash callbacks. */
     id: PropTypes.string,
 
-    /** Optional(Dict[str, Any]): The data structure defining the Gantt chart. Hierarchical data is supported. */
+    /** Optional(Dict[str, Any]): The data structure defining the Gantt chart. Hierarchical data is supported. 
+     * Optionally configure whether the coresponding timeline visual is a bar or line chart. When setting 
+     * displayType = 'line', 'dates' and 'values' must also be included. 
+    */
     data: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         name: PropTypes.string.isRequired,
         icon: PropTypes.string,
+        // For bar charts
         start: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
         end: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+        // For line charts
+        displayType: PropTypes.oneOf(['bar', 'line']),
+        dates: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])),
+        values: PropTypes.arrayOf(PropTypes.number),
+        color: PropTypes.string,
+        // Common fields
         children: PropTypes.array,
+        label: PropTypes.string
     })).isRequired,
 
     /** Optional(str): The title to display in the top left corner above the tasks window. */
@@ -393,18 +472,6 @@ DashGantt.propTypes = {
 
     /** Optional(List[str]): List of field names from the data items to display in tooltips when hovering over bars. */
     tooltipFields: PropTypes.arrayOf(PropTypes.string),
-
-    /** Optional(Dict[str, Dict]): Data for rendering line charts instead of bars for specific tasks.
-     * Object keys should match task IDs, values contain:
-     * dates: Array of dates for the x-axis
-     * values: Array of numbers (0-100) for the y-axis
-     * color: Optional color string for the line
-     */
-    lineGraphData: PropTypes.objectOf(PropTypes.shape({
-        dates: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])).isRequired,
-        values: PropTypes.arrayOf(PropTypes.number).isRequired,
-        color: PropTypes.string,
-    })),
 
     /** Optional(Dict[str, Any]): Custom styles for different parts of the component.
      * Available style objects:

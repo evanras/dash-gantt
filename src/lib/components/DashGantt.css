@@ -13,21 +13,28 @@
 /* Header container styles */
 .dash-gantt-header-container {
     display: flex;
-    border-bottom: 0.0625em solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
     background-color: #f8fafc;
     flex-shrink: 0;
-    height: 3em;                     /* 48px */
+    height: 48px;
+    position: relative;  /* Add this */
 }
 
 .dash-gantt-title {
-    width: 15.625em;                 /* 250px */
-    padding: 0.75em 1em;
+    position: absolute;  /* Change to absolute positioning */
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 250px;
+    padding: 0.75rem 1rem;
     font-weight: 600;
-    border-right: 0.0625em solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    background-color: #f8fafc;  /* Match header background */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     box-sizing: border-box;
+    z-index: 2;  /* Ensure it stays above scrolling content */
 }
 
 /* Content styles updated with ems */
@@ -40,14 +47,6 @@
 .dash-gantt-job-row {
     height: 3em;                     /* 48px */
     border-bottom: 0.0625em solid #e2e8f0;
-}
-
-/* Task bar styles */
-.dash-gantt-task-bar {
-    height: 2em;                     /* 32px */
-    top: 0.5em;                      /* 8px */
-    border-radius: 0.25em;           /* 4px */
-    font-size: 0.875em;              /* 14px */
 }
 
 /* Icons and controls */
@@ -70,7 +69,8 @@
 
 .dash-gantt *::-webkit-scrollbar-thumb {
     border-radius: 0.25em;           /* 4px */
-}/* Base styles */
+}
+/* Base styles */
 .dash-gantt {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     border: 1px solid #e2e8f0;
@@ -104,8 +104,7 @@
 .dash-gantt-header-timeline {
     flex-grow: 1;
     overflow: hidden;
-    border-left: 1px solid #e2e8f0;
-    margin-left: -1px; /* Prevent double border */
+    margin-left: 250px;  /* Match title width */
 }
 
 /* Content container */
@@ -156,10 +155,14 @@
     flex-grow: 1;
     overflow: hidden;
     position: relative;
+    margin-left: 250px;
 }
 
-.dash-gantt-timeline-scroll {
-    overflow: auto;
+.dash-gantt-timeline-wrapper {
+    min-width: 100%;  /* Change from fit-content */
+    width: 100%;      /* Add explicit width */
+    display: block;   /* Change from inline-block */
+    position: relative;
     height: 100%;
 }
 
@@ -170,6 +173,7 @@
     position: sticky;
     top: 0;
     z-index: 2;
+    width: fit-content;  /* Allow header to grow with content */
 }
 
 .dash-gantt-time-cell {
@@ -185,16 +189,38 @@
 
 .dash-gantt-timeline-content {
     position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .dash-gantt-timeline-row {
     height: 48px;
     border-bottom: 1px solid #e2e8f0;
     position: relative;
+    width: 100%;
+    display: block; 
+}
+
+.dash-gantt-timeline-scroll {
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    position: relative;
 }
 
 /* Task bar styles */
 .dash-gantt-task-bar {
+    position: absolute;
+    height: 32px;
+    top: 8px;
+    border-radius: 4px;
+    /* text-align: center; */
+    align-items: center;
+    /* justify-content: center; */
+    z-index: 1;
+    min-width: 30px;  /* Add minimum width */
+}
+/* .dash-gantt-task-bar {
     position: absolute;
     height: 32px;
     top: 8px;
@@ -207,10 +233,17 @@
     cursor: pointer;
     transition: opacity 0.2s;
     z-index: 1;
-}
+} */
 
 .dash-gantt-task-bar:hover {
     opacity: 0.9;
+}
+
+.dash-gantt-line-chart {
+    position: absolute;
+    height: 40px;
+    top: 4px;
+    z-index: 1;
 }
 
 /* Current time indicator */

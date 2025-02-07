@@ -12,8 +12,8 @@ DashGantt is a React component that creates an interactive Gantt chart with supp
 \usage{
 dashGantt(id=NULL, className=NULL, colorMapping=NULL,
 columnWidth=NULL, currentTime=NULL, data=NULL, endDate=NULL,
-lineGraphData=NULL, maxHeight=NULL, startDate=NULL,
-styles=NULL, timeScale=NULL, title=NULL, tooltipFields=NULL)
+maxHeight=NULL, startDate=NULL, styles=NULL, timeScale=NULL,
+title=NULL, tooltipFields=NULL)
 }
 
 \arguments{
@@ -41,26 +41,23 @@ map: Object mapping field values to color strings (e.g., {"completed": "green", 
 
 \item{currentTime}{Character. Optional(str | dt.datetime): The current time attribute defines where to display a vertical cutoff line.}
 
-\item{data}{List of lists containing elements 'id', 'name', 'icon', 'start', 'end', 'children'.
+\item{data}{List of lists containing elements 'id', 'name', 'icon', 'start', 'end', 'displaytype', 'dates', 'values', 'color', 'children', 'label'.
 those elements have the following types:
   - id (character | numeric; required)
   - name (character; required)
   - icon (character; optional)
   - start (character; optional)
   - end (character; optional)
-  - children (unnamed list; optional)s. Optional(Dict[str, Any]): The data structure defining the Gantt chart. Hierarchical data is supported.}
+  - displaytype (a value equal to: 'bar', 'line'; optional)
+  - dates (list of characters; optional)
+  - values (list of numerics; optional)
+  - color (character; optional)
+  - children (unnamed list; optional)
+  - label (character; optional)s. Optional(Dict[str, Any]): The data structure defining the Gantt chart. Hierarchical data is supported. 
+Optionally configure whether the coresponding timeline visual is a bar or line chart. When setting 
+displayType = 'line', 'dates' and 'values' must also be included.}
 
 \item{endDate}{Character. Required(str | dt.datetime): The very last date the timeline view will end with.}
-
-\item{lineGraphData}{List with named elements and values of type lists containing elements 'dates', 'values', 'color'.
-those elements have the following types:
-  - dates (list of characters; required)
-  - values (list of numerics; required)
-  - color (character; optional). Optional(Dict[str, Dict]): Data for rendering line charts instead of bars for specific tasks.
-Object keys should match task IDs, values contain:
-dates: Array of dates for the x-axis
-values: Array of numbers (0-100) for the y-axis
-color: Optional color string for the line}
 
 \item{maxHeight}{Character | numeric. Optional(str | number): Maximum height of the component. Can be pixel value or CSS string. Default is '80vh'.}
 

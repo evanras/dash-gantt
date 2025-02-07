@@ -1,9 +1,9 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 #' @export
-dashGantt <- function(id=NULL, className=NULL, colorMapping=NULL, columnWidth=NULL, currentTime=NULL, data=NULL, endDate=NULL, lineGraphData=NULL, maxHeight=NULL, startDate=NULL, styles=NULL, timeScale=NULL, title=NULL, tooltipFields=NULL) {
+dashGantt <- function(id=NULL, className=NULL, colorMapping=NULL, columnWidth=NULL, currentTime=NULL, data=NULL, endDate=NULL, maxHeight=NULL, startDate=NULL, styles=NULL, timeScale=NULL, title=NULL, tooltipFields=NULL) {
     
-    props <- list(id=id, className=className, colorMapping=colorMapping, columnWidth=columnWidth, currentTime=currentTime, data=data, endDate=endDate, lineGraphData=lineGraphData, maxHeight=maxHeight, startDate=startDate, styles=styles, timeScale=timeScale, title=title, tooltipFields=tooltipFields)
+    props <- list(id=id, className=className, colorMapping=colorMapping, columnWidth=columnWidth, currentTime=currentTime, data=data, endDate=endDate, maxHeight=maxHeight, startDate=startDate, styles=styles, timeScale=timeScale, title=title, tooltipFields=tooltipFields)
     if (length(props) > 0) {
         props <- props[!vapply(props, is.null, logical(1))]
     }
@@ -11,7 +11,7 @@ dashGantt <- function(id=NULL, className=NULL, colorMapping=NULL, columnWidth=NU
         props = props,
         type = 'DashGantt',
         namespace = 'dash_gantt',
-        propNames = c('id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'lineGraphData', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields'),
+        propNames = c('id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields'),
         package = 'dashGantt'
         )
 

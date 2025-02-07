@@ -59,7 +59,10 @@ Keyword arguments:
 
 - data (list of dicts; required):
     Optional(Dict[str, Any]): The data structure defining the Gantt
-    chart. Hierarchical data is supported.
+    chart. Hierarchical data is supported.  Optionally configure
+    whether the coresponding timeline visual is a bar or line chart.
+    When setting  displayType = 'line', 'dates' and 'values' must also
+    be included.
 
     `data` is a list of dicts with keys:
 
@@ -73,27 +76,21 @@ Keyword arguments:
 
     - end (string; optional)
 
+    - displayType (a value equal to: 'bar', 'line'; optional)
+
+    - dates (list of strings; optional)
+
+    - values (list of numbers; optional)
+
+    - color (string; optional)
+
     - children (list; optional)
+
+    - label (string; optional)
 
 - endDate (string; required):
     Required(str | dt.datetime): The very last date the timeline view
     will end with.
-
-- lineGraphData (dict; optional):
-    Optional(Dict[str, Dict]): Data for rendering line charts instead
-    of bars for specific tasks. Object keys should match task IDs,
-    values contain: dates: Array of dates for the x-axis values: Array
-    of numbers (0-100) for the y-axis color: Optional color string for
-    the line.
-
-    `lineGraphData` is a dict with strings as keys and values of type
-    dict with keys:
-
-    - dates (list of strings; required)
-
-    - values (list of numbers; required)
-
-    - color (string; optional)
 
 - maxHeight (string | number; default '80vh'):
     Optional(str | number): Maximum height of the component. Can be
@@ -153,10 +150,10 @@ Keyword arguments:
     _namespace = 'dash_gantt'
     _type = 'DashGantt'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, lineGraphData=Component.UNDEFINED, styles=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'lineGraphData', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, styles=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'lineGraphData', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+        self.available_properties = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
