@@ -64,6 +64,8 @@ const DashGantt = ({
         }
     }, [currentTime]);
 
+    const totalDuration = moment(endDate).diff(moment(startDate), 'minutes');
+
     /**
      * Handles horizontal scrolling of the timeline view.
      * Updates the scrollLeft state to maintain header synchronization.
@@ -96,7 +98,7 @@ const DashGantt = ({
         const start = moment(startDate);
         const end = moment(endDate);
         const current = moment(date);
-        const totalDuration = end.diff(start, 'minutes');
+        // const totalDuration = end.diff(start, 'minutes');
         const currentDuration = current.diff(start, 'minutes');
         return (currentDuration / totalDuration) * 100;
     };
@@ -111,8 +113,9 @@ const DashGantt = ({
     const calculateWidth = (startDate, endDate) => {
         const start = moment(startDate);
         const end = moment(endDate);
-        const totalDuration = moment(endDate).diff(moment(startDate), 'minutes');
+        // const totalDuration = moment(endDate).diff(moment(startDate), 'minutes');
         const taskDuration = end.diff(start, 'minutes');
+        console.log('total_duration', totalDuration, 'taskDuration', taskDuration, (taskDuration / totalDuration) * 100)
         return (taskDuration / totalDuration) * 100;
     };
 
@@ -228,10 +231,11 @@ const DashGantt = ({
     };
 
     // Calculate total width based on time intervals
+    // TODO: total width needs to be wide
     const intervals = (() => {
         const start = moment(startDate);
         const end = moment(endDate);
-        const totalDuration = end.diff(start, timeScale.unit);
+        // const totalDuration = end.diff(start, timeScale.unit);
         const numberOfIntervals = Math.ceil(totalDuration / timeScale.value);
         return Array(numberOfIntervals).fill(null);
     })();

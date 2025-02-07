@@ -101,7 +101,6 @@ const HeaderRow = ({
                     display: 'flex',
                     flexDirection: 'row',
                     position: 'absolute',
-                    left: '250px',
                     top: 0,
                     height: '100%'
                 }}

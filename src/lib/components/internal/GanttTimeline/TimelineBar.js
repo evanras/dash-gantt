@@ -28,6 +28,7 @@ const TimelineBar = ({
     label,
     tooltipContent
 }) => {
+    console.log(width)
     return (
         <div
             className="dash-gantt-task-bar"
