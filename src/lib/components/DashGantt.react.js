@@ -64,7 +64,7 @@ const DashGantt = ({
         }
     }, [currentTime]);
 
-    const totalDuration = moment(endDate).diff(moment(startDate), 'minutes');
+    const totalDuration = moment(endDate).diff(moment(startDate), timeScale.unit);
 
     /**
      * Handles horizontal scrolling of the timeline view.
@@ -91,15 +91,13 @@ const DashGantt = ({
     /**
      * Calculates the horizontal position percentage for a given date.
      * 
-     * @param {Date|string} date - Date to calculate position for
+     * @param {Date|string} date - Date to calculate position for (this should be the task's start date)
      * @returns {number} Position as percentage of timeline width
      */
     const calculatePosition = (date) => {
-        const start = moment(startDate);
-        const end = moment(endDate);
+        const taskStart = moment(startDate);
         const current = moment(date);
-        // const totalDuration = end.diff(start, 'minutes');
-        const currentDuration = current.diff(start, 'minutes');
+        const currentDuration = current.diff(taskStart, timeScale.unit);
         return (currentDuration / totalDuration) * 100;
     };
 
@@ -111,11 +109,9 @@ const DashGantt = ({
      * @returns {number} Width as percentage of timeline width
      */
     const calculateWidth = (startDate, endDate) => {
-        const start = moment(startDate);
-        const end = moment(endDate);
-        // const totalDuration = moment(endDate).diff(moment(startDate), 'minutes');
-        const taskDuration = end.diff(start, 'minutes');
-        console.log('total_duration', totalDuration, 'taskDuration', taskDuration, (taskDuration / totalDuration) * 100)
+        const taskStart = moment(startDate);
+        const taskEnd = moment(endDate);
+        const taskDuration = taskEnd.diff(taskStart, timeScale.unit);
         return (taskDuration / totalDuration) * 100;
     };
 
@@ -225,17 +221,13 @@ const DashGantt = ({
         return (
             <div 
                 className="dash-gantt-current-time"
-                style={{ left: `${currentTimePosition}%` }}
+                style={{ left: `${currentTimePosition}%`, ...(styles?.currentTime || {}) }}
             />
         );
     };
 
     // Calculate total width based on time intervals
-    // TODO: total width needs to be wide
     const intervals = (() => {
-        const start = moment(startDate);
-        const end = moment(endDate);
-        // const totalDuration = end.diff(start, timeScale.unit);
         const numberOfIntervals = Math.ceil(totalDuration / timeScale.value);
         return Array(numberOfIntervals).fill(null);
     })();
@@ -369,7 +361,8 @@ DashGantt.propTypes = {
         timeline: PropTypes.object,
         taskBar: PropTypes.object,
         timeCell: PropTypes.object,
-        caretButton: PropTypes.object
+        caretButton: PropTypes.object,
+        currentTime: PropTypes.object
     }),
 
     /** Optional custom CSS classes */

@@ -59,7 +59,7 @@ those elements have the following types:
 
 \item{startDate}{Character. Required start date for the timeline}
 
-\item{styles}{Lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskbar', 'timecell', 'caretbutton'.
+\item{styles}{Lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskbar', 'timecell', 'caretbutton', 'currenttime'.
 those elements have the following types:
   - container (named list; optional)
   - header (named list; optional)
@@ -67,7 +67,8 @@ those elements have the following types:
   - timeline (named list; optional)
   - taskbar (named list; optional)
   - timecell (named list; optional)
-  - caretbutton (named list; optional). Optional custom styles for component parts}
+  - caretbutton (named list; optional)
+  - currenttime (named list; optional). Optional custom styles for component parts}
 
 \item{timeScale}{Lists containing elements 'unit', 'value', 'format'.
 those elements have the following types:

@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 
 app = Dash(__name__)
 
+current_time = "2023-10-01 16:44"
+
 # Sample data for the Gantt chart
 data = [
     {
@@ -20,7 +22,7 @@ data = [
         "name": "Data Load",
         "start": "2023-10-01 14:11",
         "end": "2023-10-01 14:52",
-        "status": "running",
+        "status": "failed",
         "label": "Data Load",
         "children": [
             {
@@ -42,6 +44,21 @@ data = [
         ]
     },
     {
+        "id": "pipeline",
+        "name": "Pipeline",
+        "status": "running",
+        "start": "2023-10-01 15:45",
+        "end": current_time, 
+        "label": "Pipeline"
+    },
+    {
+        "id": "queued_job",
+        "name": "Queued Job",
+        "status": "queued",
+        "start": current_time,
+        "end": "2023-10-01 15:05",
+    },
+    {
         "id": "memory_usage",
         "name": "Memory Usage",
         "displayType": "line",
@@ -58,14 +75,41 @@ data = [
                 "name": "Memory Usage of Bot 1",
                 "displayType": "line",
                 "dates": [
-                    "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", "2023-10-01 14:20"
-                    "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", "2023-10-01 14:40", 
-                    "2023-10-01 14:45", "2023-10-01 14:50",
+                    "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", "2023-10-01 14:20",
+                    "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", "2023-10-01 14:40", "2023-10-01 14:45",
+                    "2023-10-01 14:50", "2023-10-01 14:55", "2023-10-01 15:00", "2023-10-01 15:45", "2023-10-01 15:50",
+                    "2023-10-01 15:55", "2023-10-01 16:05", "2023-10-01 16:15", "2023-10-01 16:20", current_time,
                 ],
-                "values": [10, 25, 36, 10, 35, 45, 95, 99, 41, 2, 4],
+                "values": [
+                    10, 25, 36, 10,
+                    35, 45, 95, 99,
+                    41, 2, 4, 4, 12,
+                    36, 58, 59, 89
+                ],
                 "color": "blue",
             }
         ]
+    },
+]
+
+data2 = [
+    {
+        "id": "source_analysis",
+        "name": "Source Data Analysis",
+        "status": "completed",
+        "start": datetime(2023, 10, 1, 2, 55),   #datetime(2023, 10, 1)
+        "end": "2023-10-01 14:30",
+        "label": "Data Analysis",
+        "progress": 100
+    },
+    {
+        "id": "another_one",
+        "name": "Another One",
+        "status": "completed",
+        "start": "2023-10-01 6:00",
+        "end": "2023-10-01 22:30",
+        "label": "Another One",
+        "progress": 100
     },
 ]
 
@@ -75,11 +119,11 @@ app.layout = html.Div([
         data=data,
         title="Jobs",
         startDate="2023-10-01 14:00",
-        endDate="2023-10-01 15:12",
-        currentTime="2023-10-01 15:00",  # Vertical line at 3 PM
+        endDate="2023-10-01 20:12",
+        currentTime=current_time,  # Vertical line at 3 PM
         timeScale={
             "unit": "minutes",
-            "value": 15,
+            "value": 30,
             "format": "HH:mm"
         },
         colorMapping={
@@ -88,7 +132,8 @@ app.layout = html.Div([
                 "completed": "#4CAF50",  # Green
                 "in_progress": "#FFA726", # Orange
                 "running": "#2196F3",     # Blue
-                "failed": "red"
+                "failed": "red",
+                "queued": "gray"
             }
         },
         tooltipFields=["status", "progress", "start", "end"],
@@ -96,7 +141,8 @@ app.layout = html.Div([
         columnWidth=100,
         maxHeight="600px",
         styles={
-            "container": {"color": "black"}
+            "container": {"color": "black"},
+            "currentTime": {"background-color": "transparent", "border-left": "2px dotted black"}
         },
     )
 ])

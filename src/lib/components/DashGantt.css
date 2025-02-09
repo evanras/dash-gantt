@@ -106,7 +106,10 @@
     width: 100%;
 }
 
-/* Hierarchical indentation levels */
+
+/* TODO: handle the caret and other icons better - NEED TO NOT INDENT CARET */
+
+/* Hierarchical indentation levels  */
 .dash-gantt-job-content[data-level="0"] { padding-left: 24px; }
 .dash-gantt-job-content[data-level="1"] { padding-left: 48px; }
 .dash-gantt-job-content[data-level="2"] { padding-left: 72px; }
@@ -209,6 +212,7 @@
 .dash-gantt-task-label {
     display: block;
     color: white;
+    text-align: center;
     font-size: 12px;
     line-height: 32px;
     padding: 0 8px;

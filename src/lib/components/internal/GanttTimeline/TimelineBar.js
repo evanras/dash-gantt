@@ -26,9 +26,8 @@ const TimelineBar = ({
     width,
     color,
     label,
-    tooltipContent
+    tooltipContent  // TODO: maybe remove tooltip content, let that be handled by other components?
 }) => {
-    console.log(width)
     return (
         <div
             className="dash-gantt-task-bar"

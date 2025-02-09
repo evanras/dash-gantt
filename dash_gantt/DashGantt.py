@@ -123,6 +123,8 @@ Keyword arguments:
 
     - caretButton (dict; optional)
 
+    - currentTime (dict; optional)
+
 - timeScale (dict; default {    unit: 'hours',    value: 1,    format: 'HH:mm'}):
     Required configuration for timeline scale and formatting.
 

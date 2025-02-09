@@ -69,15 +69,10 @@ const HeaderRow = ({
                 });
             }
         }
-        
         return intervals;
     };
 
     /**
-     * Renders the time intervals in the header
-     * @returns {JSX.Element} Rendered timeline header
-     */
-/**
      * Renders the time intervals in the header
      * @returns {JSX.Element} Rendered timeline header
      */
