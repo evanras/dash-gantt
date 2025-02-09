@@ -6,6 +6,7 @@ include dash_gantt/*-shared.js
 include dash_gantt/*-shared.js.map
 include dash_gantt/metadata.json
 include dash_gantt/package-info.json
+include dash_gantt/DashGantt.css
 include README.md
 include LICENSE
 include package.json
