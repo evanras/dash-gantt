@@ -6,18 +6,18 @@
 \title{DashGantt component}
 
 \description{
-DashGantt is a React component that creates an interactive Gantt chart with support for hierarchical data, timeline visualization, and both bar and line chart representations. It supports horizontal scrolling for timeline data while maintaining a fixed left column for job descriptions.
+DashGantt is a React component that creates an interactive Gantt chart. It supports hierarchical data, timeline visualization, and both bar and line chart representations. Features include horizontal scrolling, expandable rows, and configurable styling.  @component @param {Object} props @param {string} [props.id] - Component identifier for Dash callbacks @param {Array<Object>} props.data - Hierarchical data structure for the Gantt chart @param {string} [props.title="Jobs"] - Title displayed in the left column @param {Date|string} props.startDate - Start date for the timeline @param {Date|string} props.endDate - End date for the timeline @param {Date|string} [props.currentTime] - Current time for timeline indicator @param {Object} props.timeScale - Configuration for timeline intervals @param {number} [props.columnWidth=100] - Width of timeline columns in pixels @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component @param {Object} [props.colorMapping] - Configuration for mapping data values to colors @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips @param {Object} [props.styles] - Custom styles for component parts @param {Object} [props.className] - Custom CSS classes @param {Function} [props.setProps] - Dash callback property
 }
 
 \usage{
 dashGantt(id=NULL, className=NULL, colorMapping=NULL,
 columnWidth=NULL, currentTime=NULL, data=NULL, endDate=NULL,
-lineGraphData=NULL, maxHeight=NULL, startDate=NULL,
-styles=NULL, timeScale=NULL, title=NULL, tooltipFields=NULL)
+maxHeight=NULL, startDate=NULL, styles=NULL, timeScale=NULL,
+title=NULL, tooltipFields=NULL)
 }
 
 \arguments{
-\item{id}{Character. Optional(str): The ID used to identify this component in Dash callbacks.}
+\item{id}{Character. Optional ID used to identify this component in Dash callbacks}
 
 \item{className}{Lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskbar', 'timecell', 'caretbutton'.
 those elements have the following types:
@@ -27,46 +27,39 @@ those elements have the following types:
   - timeline (character; optional)
   - taskbar (character; optional)
   - timecell (character; optional)
-  - caretbutton (character; optional). Optional(Dict[str, Any]): Custom CSS classes for different parts of the component.
-Allows Dash developers to apply their own CSS classes}
+  - caretbutton (character; optional). Optional custom CSS classes}
 
 \item{colorMapping}{Lists containing elements 'key', 'map'.
 those elements have the following types:
   - key (character; required)
-  - map (named list; required). Optional(Dict[str, Any]): Configuration for mapping data values to colors.
-key: The field in data items to use for color mapping
-map: Object mapping field values to color strings (e.g., {"completed": "green", "pending": "orange"})}
+  - map (list with named elements and values of type character; required). Optional configuration for color mapping}
 
-\item{columnWidth}{Numeric. Optional(number): Width in pixels for each column in the timeline view. Default is 100.}
+\item{columnWidth}{Numeric. Optional width for timeline columns}
 
-\item{currentTime}{Character. Optional(str | dt.datetime): The current time attribute defines where to display a vertical cutoff line.}
+\item{currentTime}{Character. Optional current time to show indicator}
 
-\item{data}{List of lists containing elements 'id', 'name', 'icon', 'start', 'end', 'children'.
+\item{data}{List of lists containing elements 'id', 'name', 'icon', 'start', 'end', 'displaytype', 'dates', 'values', 'color', 'children', 'label', 'status'.
 those elements have the following types:
   - id (character | numeric; required)
   - name (character; required)
   - icon (character; optional)
   - start (character; optional)
   - end (character; optional)
-  - children (unnamed list; optional)s. Optional(Dict[str, Any]): The data structure defining the Gantt chart. Hierarchical data is supported.}
+  - displaytype (a value equal to: 'bar', 'line'; optional)
+  - dates (list of characters; optional)
+  - values (list of numerics; optional)
+  - color (character; optional)
+  - children (unnamed list; optional)
+  - label (character; optional)
+  - status (character; optional)s. Required data structure defining the Gantt chart}
 
-\item{endDate}{Character. Required(str | dt.datetime): The very last date the timeline view will end with.}
+\item{endDate}{Character. Required end date for the timeline}
 
-\item{lineGraphData}{List with named elements and values of type lists containing elements 'dates', 'values', 'color'.
-those elements have the following types:
-  - dates (list of characters; required)
-  - values (list of numerics; required)
-  - color (character; optional). Optional(Dict[str, Dict]): Data for rendering line charts instead of bars for specific tasks.
-Object keys should match task IDs, values contain:
-dates: Array of dates for the x-axis
-values: Array of numbers (0-100) for the y-axis
-color: Optional color string for the line}
+\item{maxHeight}{Character | numeric. Optional maximum height of the component}
 
-\item{maxHeight}{Character | numeric. Optional(str | number): Maximum height of the component. Can be pixel value or CSS string. Default is '80vh'.}
+\item{startDate}{Character. Required start date for the timeline}
 
-\item{startDate}{Character. Required(str | dt.datetime): The very first date the timeline view will begin with.}
-
-\item{styles}{Lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskbar', 'timecell', 'caretbutton'.
+\item{styles}{Lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskbar', 'timecell', 'caretbutton', 'currenttime'.
 those elements have the following types:
   - container (named list; optional)
   - header (named list; optional)
@@ -74,28 +67,18 @@ those elements have the following types:
   - timeline (named list; optional)
   - taskbar (named list; optional)
   - timecell (named list; optional)
-  - caretbutton (named list; optional). Optional(Dict[str, Any]): Custom styles for different parts of the component.
-Available style objects:
-container: Styles for the main container
-header: Styles for the header section
-jobs: Styles for the jobs column
-timeline: Styles for the timeline section
-taskBar: Styles for individual task bars
-timeCell: Styles for timeline header cells
-caretButton: Styles for expand/collapse buttons}
+  - caretbutton (named list; optional)
+  - currenttime (named list; optional). Optional custom styles for component parts}
 
 \item{timeScale}{Lists containing elements 'unit', 'value', 'format'.
 those elements have the following types:
   - unit (a value equal to: 'minutes', 'hours', 'days', 'weeks', 'months'; required)
   - value (numeric; required)
-  - format (character; required). Required(Dict[str, Any]): Configuration for the timeline scale and formatting.
-unit: The time unit for intervals ('minutes', 'hours', 'days', 'weeks', 'months')
-value: The number of units between each interval
-format: The moment.js format string for displaying dates}
+  - format (character; required). Required configuration for timeline scale and formatting}
 
-\item{title}{Character. Optional(str): The title to display in the top left corner above the tasks window.}
+\item{title}{Character. Optional title displayed in the top left corner}
 
-\item{tooltipFields}{List of characters. Optional(List[str]): List of field names from the data items to display in tooltips when hovering over bars.}
+\item{tooltipFields}{List of characters. Optional fields to display in tooltips}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

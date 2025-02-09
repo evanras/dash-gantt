@@ -5,21 +5,35 @@ from dash.development.base_component import Component, _explicitize_args
 
 class DashGantt(Component):
     """A DashGantt component.
-DashGantt is a React component that creates an interactive Gantt chart with support for
-hierarchical data, timeline visualization, and both bar and line chart representations.
-It supports horizontal scrolling for timeline data while maintaining a fixed left column
-for job descriptions.
+DashGantt is a React component that creates an interactive Gantt chart.
+It supports hierarchical data, timeline visualization, and both bar and line
+chart representations. Features include horizontal scrolling, expandable rows,
+and configurable styling.
+
+@component
+@param {Object} props
+@param {string} [props.id] - Component identifier for Dash callbacks
+@param {Array<Object>} props.data - Hierarchical data structure for the Gantt chart
+@param {string} [props.title="Jobs"] - Title displayed in the left column
+@param {Date|string} props.startDate - Start date for the timeline
+@param {Date|string} props.endDate - End date for the timeline
+@param {Date|string} [props.currentTime] - Current time for timeline indicator
+@param {Object} props.timeScale - Configuration for timeline intervals
+@param {number} [props.columnWidth=100] - Width of timeline columns in pixels
+@param {string|number} [props.maxHeight='80vh'] - Maximum height of the component
+@param {Object} [props.colorMapping] - Configuration for mapping data values to colors
+@param {Array<string>} [props.tooltipFields] - Fields to display in tooltips
+@param {Object} [props.styles] - Custom styles for component parts
+@param {Object} [props.className] - Custom CSS classes
+@param {Function} [props.setProps] - Dash callback property
 
 Keyword arguments:
 
 - id (string; optional):
-    Optional(str): The ID used to identify this component in Dash
-    callbacks.
+    Optional ID used to identify this component in Dash callbacks.
 
 - className (dict; optional):
-    Optional(Dict[str, Any]): Custom CSS classes for different parts
-    of the component. Allows Dash developers to apply their own CSS
-    classes.
+    Optional custom CSS classes.
 
     `className` is a dict with keys:
 
@@ -38,28 +52,22 @@ Keyword arguments:
     - caretButton (string; optional)
 
 - colorMapping (dict; default {    key: 'status',    map: {        'completed': '#4CAF50',        'in_progress': '#FFA726',        'pending': '#90CAF9'    }}):
-    Optional(Dict[str, Any]): Configuration for mapping data values to
-    colors. key: The field in data items to use for color mapping map:
-    Object mapping field values to color strings (e.g.,
-    {\"completed\": \"green\", \"pending\": \"orange\"}).
+    Optional configuration for color mapping.
 
     `colorMapping` is a dict with keys:
 
     - key (string; required)
 
-    - map (dict; required)
+    - map (dict with strings as keys and values of type string; required)
 
 - columnWidth (number; default 100):
-    Optional(number): Width in pixels for each column in the timeline
-    view. Default is 100.
+    Optional width for timeline columns.
 
 - currentTime (string; optional):
-    Optional(str | dt.datetime): The current time attribute defines
-    where to display a vertical cutoff line.
+    Optional current time to show indicator.
 
 - data (list of dicts; required):
-    Optional(Dict[str, Any]): The data structure defining the Gantt
-    chart. Hierarchical data is supported.
+    Required data structure defining the Gantt chart.
 
     `data` is a list of dicts with keys:
 
@@ -73,43 +81,31 @@ Keyword arguments:
 
     - end (string; optional)
 
-    - children (list; optional)
+    - displayType (a value equal to: 'bar', 'line'; optional)
 
-- endDate (string; required):
-    Required(str | dt.datetime): The very last date the timeline view
-    will end with.
+    - dates (list of strings; optional)
 
-- lineGraphData (dict; optional):
-    Optional(Dict[str, Dict]): Data for rendering line charts instead
-    of bars for specific tasks. Object keys should match task IDs,
-    values contain: dates: Array of dates for the x-axis values: Array
-    of numbers (0-100) for the y-axis color: Optional color string for
-    the line.
-
-    `lineGraphData` is a dict with strings as keys and values of type
-    dict with keys:
-
-    - dates (list of strings; required)
-
-    - values (list of numbers; required)
+    - values (list of numbers; optional)
 
     - color (string; optional)
 
+    - children (list; optional)
+
+    - label (string; optional)
+
+    - status (string; optional)
+
+- endDate (string; required):
+    Required end date for the timeline.
+
 - maxHeight (string | number; default '80vh'):
-    Optional(str | number): Maximum height of the component. Can be
-    pixel value or CSS string. Default is '80vh'.
+    Optional maximum height of the component.
 
 - startDate (string; required):
-    Required(str | dt.datetime): The very first date the timeline view
-    will begin with.
+    Required start date for the timeline.
 
 - styles (dict; optional):
-    Optional(Dict[str, Any]): Custom styles for different parts of the
-    component. Available style objects: container: Styles for the main
-    container header: Styles for the header section jobs: Styles for
-    the jobs column timeline: Styles for the timeline section taskBar:
-    Styles for individual task bars timeCell: Styles for timeline
-    header cells caretButton: Styles for expand/collapse buttons.
+    Optional custom styles for component parts.
 
     `styles` is a dict with keys:
 
@@ -127,11 +123,10 @@ Keyword arguments:
 
     - caretButton (dict; optional)
 
+    - currentTime (dict; optional)
+
 - timeScale (dict; default {    unit: 'hours',    value: 1,    format: 'HH:mm'}):
-    Required(Dict[str, Any]): Configuration for the timeline scale and
-    formatting. unit: The time unit for intervals ('minutes', 'hours',
-    'days', 'weeks', 'months') value: The number of units between each
-    interval format: The moment.js format string for displaying dates.
+    Required configuration for timeline scale and formatting.
 
     `timeScale` is a dict with keys:
 
@@ -141,22 +136,20 @@ Keyword arguments:
 
     - format (string; required)
 
-- title (string; optional):
-    Optional(str): The title to display in the top left corner above
-    the tasks window.
+- title (string; default "Jobs"):
+    Optional title displayed in the top left corner.
 
 - tooltipFields (list of strings; default ['name', 'status']):
-    Optional(List[str]): List of field names from the data items to
-    display in tooltips when hovering over bars."""
+    Optional fields to display in tooltips."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_gantt'
     _type = 'DashGantt'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, lineGraphData=Component.UNDEFINED, styles=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'lineGraphData', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, styles=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'lineGraphData', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+        self.available_properties = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
