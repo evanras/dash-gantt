@@ -79,7 +79,12 @@ _js_dist.extend(
     ]
 )
 
-_css_dist = []
+_css_dist = [
+    {
+        "relative_package_path": "DashGantt.css",
+        "namespace": "dash_gantt"
+    }
+]
 
 
 for _component in __all__:
