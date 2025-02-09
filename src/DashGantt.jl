@@ -30,6 +30,13 @@ DashBase.Resource(
     dynamic = true,
     async = nothing,
     type = :js
+),
+DashBase.Resource(
+    relative_package_path = "DashGantt.css",
+    external_url = nothing,
+    dynamic = nothing,
+    async = nothing,
+    type = :css
 )
             ]
         )

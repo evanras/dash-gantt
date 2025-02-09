@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import HeaderRow from './internal/GanttHeader/HeaderRow';
 import TimelineContent from './internal/GanttTimeline/TimelineContent';
-import './DashGantt.css';
 
 /**
  * DashGantt is a React component that creates an interactive Gantt chart.
