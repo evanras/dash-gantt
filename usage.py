@@ -58,29 +58,41 @@ data = [
         "name": "Queued Job",
         "status": "queued",
         "start": current_time,
-        "end": "2023-10-01 15:05",
+        "end": "2023-10-01 16:55",
     },
     {
         "id": "memory_usage",
         "name": "Memory Usage",
         "displayType": "line",
         "dates": [
-            "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", "2023-10-01 14:20"
-            "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", "2023-10-01 14:40", 
-            "2023-10-01 14:45", "2023-10-01 14:50",
+            "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", "2023-10-01 14:20",
+            "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", "2023-10-01 14:40", "2023-10-01 14:45", 
+            "2023-10-01 14:50",
         ],
-        "values": [20, 35, 56, 40, 45, 75, 95, 87, 38, 12, 44],
+        "values": [
+            20, 35, 56, 40, 45,
+            75, 95, 87, 38, 12,
+            44
+        ],
         "color": "black",
+        "fill": {
+            "enabled": True,
+            "gradient": {
+                "startOpacity": 1,
+                "endOpacity": 0.01
+            }
+        },
         "children": [
             {
                 "id": "bot 1 memory usage",
                 "name": "Memory Usage of Bot 1",
                 "displayType": "line",
                 "dates": [
-                    "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", "2023-10-01 14:20",
-                    "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", "2023-10-01 14:40", "2023-10-01 14:45",
-                    "2023-10-01 14:50", "2023-10-01 14:55", "2023-10-01 15:00", "2023-10-01 15:45", "2023-10-01 15:50",
-                    "2023-10-01 15:55", "2023-10-01 16:05", "2023-10-01 16:15", "2023-10-01 16:20", current_time,
+                    "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", 
+                    "2023-10-01 14:20", "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", 
+                    "2023-10-01 14:40", "2023-10-01 14:45", "2023-10-01 14:50", "2023-10-01 14:55", 
+                    "2023-10-01 15:00", "2023-10-01 15:45", "2023-10-01 15:50", "2023-10-01 15:55", 
+                    "2023-10-01 16:05"
                 ],
                 "values": [
                     10, 25, 36, 10,
@@ -89,6 +101,13 @@ data = [
                     36, 58, 59, 89
                 ],
                 "color": "blue",
+                "fill": {
+                    "enabled": True,
+                    "gradient": {
+                        "startOpacity": 0.5,
+                        "endOpacity": 0
+                    }
+                }
             }
         ]
     },
@@ -145,29 +164,29 @@ app.layout = html.Div([
         maxHeight="600px",
         styles={
             "container": {"color": "black"},
-            "currentTime": {"background-color": "transparent", "border-left": "2px dotted black"},
-            "timeCell": {"text-align": "center", "background-color": "#f8fafc", "text-color": "black", "background": "black"},
+            "currentTime": {"backgroundColor": "transparent", "border-left": "2px dotted black"},
+            "timeCell": {"text-align": "center", "backgroundColor": "#f8fafc", "color": "white", "background": "black"},
         },
     )
-], style={"height": "200px"})
+])  #, style={"height": "200px"})
 
 
-@app.callback(
-    Output("gantt-chart", "styles"),
-    [Input("interval", "n_intervals")]
-)
-def update_inner_dash_gantt_component(n_intervals) -> dict[str, str]:
-    # ctx = dash.callback_context
-    # print(ctx)
-    # print(ctx.__dict__)
-    possible_colors = ["red", "green", "purple", "black", "orange", "yellow"]
-    color = possible_colors[n_intervals] if n_intervals is not None and n_intervals < 6 else "light blue"
-    text_color = "black" if color != "black" else "white"
-    return {
-        "container": {"color": color},
-        "currentTime": {"background-color": color, "border-left": f"2px dotted {color}"},
-        "timeCell": {"text-align": "right", "background-color": color, "color": text_color},
-    }
+# @app.callback(
+#     Output("gantt-chart", "styles"),
+#     [Input("interval", "n_intervals")]
+# )
+# def update_inner_dash_gantt_component(n_intervals) -> dict[str, str]:
+#     # ctx = dash.callback_context
+#     # print(ctx)
+#     # print(ctx.__dict__)
+#     possible_colors = ["red", "green", "purple", "black", "orange", "yellow"]
+#     color = possible_colors[n_intervals] if n_intervals is not None and n_intervals < 6 else "light blue"
+#     text_color = "black" if color != "black" else "white"
+#     return {
+#         # "container": {"color": color},
+#         # "currentTime": {"background-color": color, "border-left": f"2px dotted {color}"},
+#         # "timeCell": {"text-align": "right", "background-color": color, "color": text_color},
+#     }
 
 
 if __name__ == '__main__':
