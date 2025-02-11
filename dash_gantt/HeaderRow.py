@@ -22,6 +22,27 @@ Keyword arguments:
 - startDate (string; required):
     Start date for the timeline.
 
+- styles (dict; optional):
+    Optional custom styles for header row components.
+
+    `styles` is a dict with keys:
+
+    - container (dict; optional)
+
+    - header (dict; optional)
+
+    - jobs (dict; optional)
+
+    - timeline (dict; optional)
+
+    - taskBar (dict; optional)
+
+    - timeCell (dict; optional)
+
+    - caretButton (dict; optional)
+
+    - currentTime (dict; optional)
+
 - timeScale (dict; required):
     Configuration for time scale display.
 
@@ -34,16 +55,19 @@ Keyword arguments:
     - format (string; required)
 
 - title (string; default "Jobs"):
-    Title displayed in the left column."""
+    Title displayed in the left column.
+
+- titleWidth (number; default 250):
+    Width of the jobs panel."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_gantt'
     _type = 'HeaderRow'
     @_explicitize_args
-    def __init__(self, startDate=Component.REQUIRED, endDate=Component.REQUIRED, timeScale=Component.REQUIRED, headerHeight=Component.UNDEFINED, scrollLeft=Component.REQUIRED, title=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['endDate', 'headerHeight', 'scrollLeft', 'startDate', 'timeScale', 'title']
+    def __init__(self, startDate=Component.REQUIRED, endDate=Component.REQUIRED, timeScale=Component.REQUIRED, headerHeight=Component.UNDEFINED, scrollLeft=Component.REQUIRED, title=Component.UNDEFINED, titleWidth=Component.UNDEFINED, styles=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['endDate', 'headerHeight', 'scrollLeft', 'startDate', 'styles', 'timeScale', 'title', 'titleWidth']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['endDate', 'headerHeight', 'scrollLeft', 'startDate', 'timeScale', 'title']
+        self.available_properties = ['endDate', 'headerHeight', 'scrollLeft', 'startDate', 'styles', 'timeScale', 'title', 'titleWidth']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

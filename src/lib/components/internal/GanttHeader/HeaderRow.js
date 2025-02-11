@@ -12,7 +12,9 @@ const HeaderRow = ({
     timeScale,
     headerHeight = 48,
     scrollLeft,
-    title = "Jobs"
+    title = "Jobs",
+    titleWidth = 250,
+    styles,
 }) => {
     const MIN_COLUMN_WIDTH = 100; // Minimum width for readability
     const [containerWidth, setContainerWidth] = useState(0);
@@ -111,7 +113,8 @@ const HeaderRow = ({
                             alignItems: 'center',
                             justifyContent: 'center',
                             borderRight: '1px solid #e2e8f0',
-                            boxSizing: 'border-box'
+                            boxSizing: 'border-box',
+                            ...(styles?.timeCell || {})
                         }}
                     >
                         {interval.label}
@@ -126,10 +129,18 @@ const HeaderRow = ({
             className="dash-gantt-header-container"
             ref={headerRef}
         >
-            <div className="dash-gantt-title">
+            <div 
+                className="dash-gantt-title"
+                style={{ width: titleWidth }}
+            >
                 {title}
             </div>
-            {containerWidth > 0 && renderIntervals()}
+            <div 
+                className="dash-gantt-header-timeline"
+                style={{ marginLeft: titleWidth }}
+            >
+                {containerWidth > 0 && renderIntervals()}
+            </div>
         </div>
     );
 };
@@ -155,7 +166,22 @@ HeaderRow.propTypes = {
     scrollLeft: PropTypes.number.isRequired,
     
     /** Title displayed in the left column */
-    title: PropTypes.string
+    title: PropTypes.string,
+
+    /** Width of the jobs panel */
+    titleWidth: PropTypes.number,
+
+    /** Optional custom styles for header row components */
+    styles: PropTypes.shape({
+        container: PropTypes.object,
+        header: PropTypes.object,
+        jobs: PropTypes.object,
+        timeline: PropTypes.object,
+        taskBar: PropTypes.object,
+        timeCell: PropTypes.object,
+        caretButton: PropTypes.object,
+        currentTime: PropTypes.object
+    })
 };
 
 HeaderRow.defaultProps = {

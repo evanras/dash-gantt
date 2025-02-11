@@ -24,7 +24,7 @@ and configurable styling.
 @param {Object} [props.colorMapping] - Configuration for mapping data values to colors
 @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips
 @param {Object} [props.styles] - Custom styles for component parts
-@param {Object} [props.className] - Custom CSS classes
+@param {Object} [props.classNames] - Custom CSS classes
 @param {Function} [props.setProps] - Dash callback property
 
 Keyword arguments:
@@ -32,10 +32,10 @@ Keyword arguments:
 - id (string; optional):
     Optional ID used to identify this component in Dash callbacks.
 
-- className (dict; optional):
+- classNames (dict; optional):
     Optional custom CSS classes.
 
-    `className` is a dict with keys:
+    `classNames` is a dict with keys:
 
     - container (string; optional)
 
@@ -77,9 +77,15 @@ Keyword arguments:
 
     - icon (string; optional)
 
+    - children (list; optional)
+
     - start (string; optional)
 
     - end (string; optional)
+
+    - label (string; optional)
+
+    - status (string; optional)
 
     - displayType (a value equal to: 'bar', 'line'; optional)
 
@@ -88,12 +94,6 @@ Keyword arguments:
     - values (list of numbers; optional)
 
     - color (string; optional)
-
-    - children (list; optional)
-
-    - label (string; optional)
-
-    - status (string; optional)
 
 - endDate (string; required):
     Required end date for the timeline.
@@ -146,10 +146,10 @@ Keyword arguments:
     _namespace = 'dash_gantt'
     _type = 'DashGantt'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, styles=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, styles=Component.UNDEFINED, classNames=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'classNames', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+        self.available_properties = ['id', 'classNames', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

@@ -25,11 +25,11 @@ and configurable styling.
 @param {Object} [props.colorMapping] - Configuration for mapping data values to colors
 @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips
 @param {Object} [props.styles] - Custom styles for component parts
-@param {Object} [props.className] - Custom CSS classes
+@param {Object} [props.classNames] - Custom CSS classes
 @param {Function} [props.setProps] - Dash callback property
 Keyword arguments:
 - `id` (String; optional): Optional ID used to identify this component in Dash callbacks
-- `className` (optional): Optional custom CSS classes. className has the following type: lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskBar', 'timeCell', 'caretButton'.
+- `classNames` (optional): Optional custom CSS classes. classNames has the following type: lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskBar', 'timeCell', 'caretButton'.
 Those elements have the following types:
   - `container` (String; optional)
   - `header` (String; optional)
@@ -44,20 +44,20 @@ Those elements have the following types:
   - `map` (Dict with Strings as keys and values of type String; required)
 - `columnWidth` (Real; optional): Optional width for timeline columns
 - `currentTime` (String; optional): Optional current time to show indicator
-- `data` (required): Required data structure defining the Gantt chart. data has the following type: Array of lists containing elements 'id', 'name', 'icon', 'start', 'end', 'displayType', 'dates', 'values', 'color', 'children', 'label', 'status'.
+- `data` (required): Required data structure defining the Gantt chart. data has the following type: Array of lists containing elements 'id', 'name', 'icon', 'children', 'start', 'end', 'label', 'status', 'displayType', 'dates', 'values', 'color'.
 Those elements have the following types:
   - `id` (String | Real; required)
   - `name` (String; required)
   - `icon` (String; optional)
+  - `children` (Array; optional)
   - `start` (String; optional)
   - `end` (String; optional)
+  - `label` (String; optional)
+  - `status` (String; optional)
   - `displayType` (a value equal to: 'bar', 'line'; optional)
   - `dates` (Array of Strings; optional)
   - `values` (Array of Reals; optional)
-  - `color` (String; optional)
-  - `children` (Array; optional)
-  - `label` (String; optional)
-  - `status` (String; optional)s
+  - `color` (String; optional)s
 - `endDate` (String; required): Required end date for the timeline
 - `maxHeight` (String | Real; optional): Optional maximum height of the component
 - `startDate` (String; required): Required start date for the timeline
@@ -80,7 +80,7 @@ Those elements have the following types:
 - `tooltipFields` (Array of Strings; optional): Optional fields to display in tooltips
 """
 function dashgantt(; kwargs...)
-        available_props = Symbol[:id, :className, :colorMapping, :columnWidth, :currentTime, :data, :endDate, :maxHeight, :startDate, :styles, :timeScale, :title, :tooltipFields]
+        available_props = Symbol[:id, :classNames, :colorMapping, :columnWidth, :currentTime, :data, :endDate, :maxHeight, :startDate, :styles, :timeScale, :title, :tooltipFields]
         wild_props = Symbol[]
         return Component("dashgantt", "DashGantt", "dash_gantt", available_props, wild_props; kwargs...)
 end

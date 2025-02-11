@@ -1,9 +1,9 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 #' @export
-headerRow <- function(endDate=NULL, headerHeight=NULL, scrollLeft=NULL, startDate=NULL, timeScale=NULL, title=NULL) {
+headerRow <- function(endDate=NULL, headerHeight=NULL, scrollLeft=NULL, startDate=NULL, styles=NULL, timeScale=NULL, title=NULL, titleWidth=NULL) {
     
-    props <- list(endDate=endDate, headerHeight=headerHeight, scrollLeft=scrollLeft, startDate=startDate, timeScale=timeScale, title=title)
+    props <- list(endDate=endDate, headerHeight=headerHeight, scrollLeft=scrollLeft, startDate=startDate, styles=styles, timeScale=timeScale, title=title, titleWidth=titleWidth)
     if (length(props) > 0) {
         props <- props[!vapply(props, is.null, logical(1))]
     }
@@ -11,7 +11,7 @@ headerRow <- function(endDate=NULL, headerHeight=NULL, scrollLeft=NULL, startDat
         props = props,
         type = 'HeaderRow',
         namespace = 'dash_gantt',
-        propNames = c('endDate', 'headerHeight', 'scrollLeft', 'startDate', 'timeScale', 'title'),
+        propNames = c('endDate', 'headerHeight', 'scrollLeft', 'startDate', 'styles', 'timeScale', 'title', 'titleWidth'),
         package = 'dashGantt'
         )
 

@@ -49,6 +49,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: width 0.05s ease-out;
     box-sizing: border-box;
     z-index: 2;
 }
@@ -56,7 +57,6 @@
 .dash-gantt-header-timeline {
     flex-grow: 1;
     overflow: hidden;
-    margin-left: 250px;
 }
 
 .dash-gantt-time-cell {
@@ -80,6 +80,8 @@
     border-right: 1px solid #e2e8f0;
     overflow-y: auto;
     background: white;
+    scrollbar-width: none;
+    transition: width 0.05s ease-out;
     z-index: 5;
 }
 
@@ -93,6 +95,7 @@
 .dash-gantt-job-title {
     flex-grow: 1;
     display: flex;
+    min-width: 0;
     align-items: center;
     padding: 0 1rem;
     box-sizing: border-box;
@@ -106,21 +109,64 @@
     width: 100%;
 }
 
+.dash-gantt-resize-handle {
+    width: 4px;
+    cursor: col-resize;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: transparent;
+    transition: background-color 0.2s;
+    z-index: 10;
+}
 
-/* TODO: handle the caret and other icons better - NEED TO NOT INDENT CARET */
+.dash-gantt-resize-handle:hover,
+.dash-gantt-resize-handle:active {
+    background-color: #e2e8f0;
+}
 
-/* Hierarchical indentation levels  */
-.dash-gantt-job-content[data-level="0"] { padding-left: 24px; }
-.dash-gantt-job-content[data-level="1"] { padding-left: 48px; }
-.dash-gantt-job-content[data-level="2"] { padding-left: 72px; }
-.dash-gantt-job-content[data-level="3"] { padding-left: 96px; }
-
-.dash-gantt-job-name {
-    font-size: 14px;
-    white-space: nowrap;
+.dash-gantt-job-title {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    /* white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 250px;
+    display: inline-block; */
 }
+
+.dash-gantt-job-content {
+    display: grid;
+    grid-template-columns: 24px 1fr; /* Fixed width for caret/placeholder + content */
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+.dash-gantt-caret-container {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dash-gantt-job-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0; /* Allows text truncation */
+}
+
+/* Update indentation to account for grid layout */
+.dash-gantt-job-content[data-level="0"] { padding-left: 0; }
+.dash-gantt-job-content[data-level="1"] { padding-left: 24px; }
+.dash-gantt-job-content[data-level="2"] { padding-left: 48px; }
+.dash-gantt-job-content[data-level="3"] { padding-left: 72px; }
 
 .dash-gantt-caret {
     width: 16px;
@@ -175,6 +221,9 @@
     height: 48px;
     border-bottom: 1px solid #e2e8f0;
     position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Current time indicator */
@@ -335,8 +384,8 @@
         width: 200px;
     }
 
-    .dash-gantt-header-timeline {
-        margin-left: 200px;
+    .dash-gantt-resize-handle {
+        left: 200px;
     }
 }
 /* #endregion */
