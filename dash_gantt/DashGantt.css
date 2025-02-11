@@ -80,6 +80,7 @@
     border-right: 1px solid #e2e8f0;
     overflow-y: auto;
     background: white;
+    scrollbar-width: none;
     z-index: 5;
 }
 

@@ -6,11 +6,11 @@
 \title{DashGantt component}
 
 \description{
-DashGantt is a React component that creates an interactive Gantt chart. It supports hierarchical data, timeline visualization, and both bar and line chart representations. Features include horizontal scrolling, expandable rows, and configurable styling.  @component @param {Object} props @param {string} [props.id] - Component identifier for Dash callbacks @param {Array<Object>} props.data - Hierarchical data structure for the Gantt chart @param {string} [props.title="Jobs"] - Title displayed in the left column @param {Date|string} props.startDate - Start date for the timeline @param {Date|string} props.endDate - End date for the timeline @param {Date|string} [props.currentTime] - Current time for timeline indicator @param {Object} props.timeScale - Configuration for timeline intervals @param {number} [props.columnWidth=100] - Width of timeline columns in pixels @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component @param {Object} [props.colorMapping] - Configuration for mapping data values to colors @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips @param {Object} [props.styles] - Custom styles for component parts @param {Object} [props.className] - Custom CSS classes @param {Function} [props.setProps] - Dash callback property
+DashGantt is a React component that creates an interactive Gantt chart. It supports hierarchical data, timeline visualization, and both bar and line chart representations. Features include horizontal scrolling, expandable rows, and configurable styling.  @component @param {Object} props @param {string} [props.id] - Component identifier for Dash callbacks @param {Array<Object>} props.data - Hierarchical data structure for the Gantt chart @param {string} [props.title="Jobs"] - Title displayed in the left column @param {Date|string} props.startDate - Start date for the timeline @param {Date|string} props.endDate - End date for the timeline @param {Date|string} [props.currentTime] - Current time for timeline indicator @param {Object} props.timeScale - Configuration for timeline intervals @param {number} [props.columnWidth=100] - Width of timeline columns in pixels @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component @param {Object} [props.colorMapping] - Configuration for mapping data values to colors @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips @param {Object} [props.styles] - Custom styles for component parts @param {Object} [props.classNames] - Custom CSS classes @param {Function} [props.setProps] - Dash callback property
 }
 
 \usage{
-dashGantt(id=NULL, className=NULL, colorMapping=NULL,
+dashGantt(id=NULL, classNames=NULL, colorMapping=NULL,
 columnWidth=NULL, currentTime=NULL, data=NULL, endDate=NULL,
 maxHeight=NULL, startDate=NULL, styles=NULL, timeScale=NULL,
 title=NULL, tooltipFields=NULL)
@@ -19,7 +19,7 @@ title=NULL, tooltipFields=NULL)
 \arguments{
 \item{id}{Character. Optional ID used to identify this component in Dash callbacks}
 
-\item{className}{Lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskbar', 'timecell', 'caretbutton'.
+\item{classNames}{Lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskbar', 'timecell', 'caretbutton'.
 those elements have the following types:
   - container (character; optional)
   - header (character; optional)
@@ -38,20 +38,20 @@ those elements have the following types:
 
 \item{currentTime}{Character. Optional current time to show indicator}
 
-\item{data}{List of lists containing elements 'id', 'name', 'icon', 'start', 'end', 'displaytype', 'dates', 'values', 'color', 'children', 'label', 'status'.
+\item{data}{List of lists containing elements 'id', 'name', 'icon', 'children', 'start', 'end', 'label', 'status', 'displaytype', 'dates', 'values', 'color'.
 those elements have the following types:
   - id (character | numeric; required)
   - name (character; required)
   - icon (character; optional)
+  - children (unnamed list; optional)
   - start (character; optional)
   - end (character; optional)
+  - label (character; optional)
+  - status (character; optional)
   - displaytype (a value equal to: 'bar', 'line'; optional)
   - dates (list of characters; optional)
   - values (list of numerics; optional)
-  - color (character; optional)
-  - children (unnamed list; optional)
-  - label (character; optional)
-  - status (character; optional)s. Required data structure defining the Gantt chart}
+  - color (character; optional)s. Required data structure defining the Gantt chart}
 
 \item{endDate}{Character. Required end date for the timeline}
 

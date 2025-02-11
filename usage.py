@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 app = Dash(__name__)
 
 current_time = "2023-10-01 16:44"
+current_time = datetime(2023, 10, 1, 16, 44)
 
 # Sample data for the Gantt chart
 data = [
@@ -145,7 +146,7 @@ app.layout = html.Div([
             "currentTime": {"background-color": "transparent", "border-left": "2px dotted black"}
         },
     )
-])
+], style={"height": "200px"})
 
 if __name__ == '__main__':
     app.run(debug=True)

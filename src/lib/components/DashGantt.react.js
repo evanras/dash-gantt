@@ -30,7 +30,7 @@ import TimelineContent from './internal/GanttTimeline/TimelineContent';
  * @param {Object} [props.colorMapping] - Configuration for mapping data values to colors
  * @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips
  * @param {Object} [props.styles] - Custom styles for component parts
- * @param {Object} [props.className] - Custom CSS classes
+ * @param {Object} [props.classNames] - Custom CSS classes
  * @param {Function} [props.setProps] - Dash callback property
  */
 const DashGantt = ({
@@ -46,34 +46,75 @@ const DashGantt = ({
     colorMapping,
     tooltipFields,
     styles = {},
-    className = {},
+    classNames = {},
     setProps
 }) => {
     const [expandedRows, setExpandedRows] = useState({});
     const [scrollLeft, setScrollLeft] = useState(0);
     const [currentTimePosition, setCurrentTimePosition] = useState(0);
     const [tooltip, setTooltip] = useState({ content: '', visible: false, x: 0, y: 0 });
-    const timelineRef = useRef(null);
     const tooltipRef = useRef(null);
+    const timelineRef = useRef(null);
+    const jobsRef = useRef(null);
+    const isScrolling = useRef(false);
 
     useEffect(() => {
         if (currentTime) {
-            const position = calculatePosition(currentTime);
+            const position = calculatePosition(moment(currentTime));
             setCurrentTimePosition(position);
         }
     }, [currentTime]);
 
     const totalDuration = moment(endDate).diff(moment(startDate), timeScale.unit);
 
-    /**
-     * Handles horizontal scrolling of the timeline view.
-     * Updates the scrollLeft state to maintain header synchronization.
-     * 
-     * @param {Event} e - Scroll event object
-     */
-    const handleTimelineScroll = (e) => {
-        setScrollLeft(e.target.scrollLeft);
+    // Function to handle synchronized scrolling
+    const handleScroll = (event) => {
+        if (isScrolling.current) return;
+        
+        try {
+            isScrolling.current = true;
+            const { scrollTop, scrollLeft } = event.target;
+            
+            // Determine which container triggered the scroll
+            const isTimelineScroll = event.target === timelineRef.current?.querySelector('.dash-gantt-timeline-scroll');
+            
+            if (isTimelineScroll) {
+                // Timeline was scrolled, sync jobs panel
+                if (jobsRef.current) {
+                    jobsRef.current.scrollTop = scrollTop;
+                }
+                setScrollLeft(scrollLeft);
+            } else {
+                // Jobs panel was scrolled, sync timeline
+                if (timelineRef.current) {
+                    const timelineScroll = timelineRef.current.querySelector('.dash-gantt-timeline-scroll');
+                    if (timelineScroll) {
+                        timelineScroll.scrollTop = scrollTop;
+                    }
+                }
+            }
+        } finally {
+            // Use RAF to prevent scroll event spam
+            requestAnimationFrame(() => {
+                isScrolling.current = false;
+            });
+        }
     };
+
+    // Add effect to ensure scroll positions stay synced after window resize
+    useEffect(() => {
+        const syncScrollPositions = () => {
+            if (jobsRef.current && timelineRef.current) {
+                const timelineScroll = timelineRef.current.querySelector('.dash-gantt-timeline-scroll');
+                if (timelineScroll) {
+                    timelineScroll.scrollTop = jobsRef.current.scrollTop;
+                }
+            }
+        };
+
+        window.addEventListener('resize', syncScrollPositions);
+        return () => window.removeEventListener('resize', syncScrollPositions);
+    }, []);
 
     /**
      * Toggles the expanded/collapsed state of a hierarchical row.
@@ -236,7 +277,7 @@ const DashGantt = ({
     return (
         <div 
             id={id} 
-            className={`dash-gantt ${className?.container || ''}`}
+            className={`dash-gantt ${classNames?.container || ''}`}
             style={{ maxHeight, ...(styles?.container || {}) }}
         >
             <HeaderRow
@@ -250,23 +291,28 @@ const DashGantt = ({
             />
             
             <div className="dash-gantt-content">
-                {/* Fixed left column with job titles */}
-                <div className="dash-gantt-jobs">
+                {/* Jobs panel */}
+                <div 
+                    ref={jobsRef}
+                    className="dash-gantt-jobs"
+                    onScroll={handleScroll}
+                >
                     {renderHierarchicalData(data)}
                 </div>
 
-                {/* Scrollable timeline section */}
-                <div className="dash-gantt-timeline">
+                {/* Timeline section */}
+                <div 
+                    ref={timelineRef}
+                    className="dash-gantt-timeline"
+                >
                     <div 
                         className="dash-gantt-timeline-scroll"
-                        onScroll={handleTimelineScroll}
-                        ref={timelineRef}
+                        onScroll={handleScroll}
                     >
                         <div 
                             className="dash-gantt-timeline-wrapper"
                             style={{ width: totalWidth }}
                         >
-                            {/* Removed Grid component */}
                             {renderCurrentTimeLine()}
                             <TimelineContent
                                 items={data}
@@ -301,21 +347,21 @@ DashGantt.propTypes = {
 
     /** Required data structure defining the Gantt chart */
     data: PropTypes.arrayOf(PropTypes.shape({
+        // Common fields
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         name: PropTypes.string.isRequired,
         icon: PropTypes.string,
+        children: PropTypes.array,
         // For bar charts
         start: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
         end: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+        label: PropTypes.string,
+        status: PropTypes.string,
         // For line charts
         displayType: PropTypes.oneOf(['bar', 'line']),
         dates: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])),
         values: PropTypes.arrayOf(PropTypes.number),
-        color: PropTypes.string,
-        // Common fields
-        children: PropTypes.array,
-        label: PropTypes.string,
-        status: PropTypes.string
+        color: PropTypes.string
     })).isRequired,
 
     /** Optional title displayed in the top left corner */
@@ -365,7 +411,7 @@ DashGantt.propTypes = {
     }),
 
     /** Optional custom CSS classes */
-    className: PropTypes.shape({
+    classNames: PropTypes.shape({
         container: PropTypes.string,
         header: PropTypes.string,
         jobs: PropTypes.string,
