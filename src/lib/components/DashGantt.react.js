@@ -239,7 +239,7 @@ const DashGantt = ({
 
     /**
      * Renders a job title with appropriate indentation and controls.
-     * Includes caret for expandable items and optional icons.
+     * Uses a grid layout to maintain consistent spacing regardless of caret presence.
      * 
      * @param {Object} item - Job data item
      * @param {number} level - Hierarchy level for indentation
@@ -250,27 +250,34 @@ const DashGantt = ({
             <div 
                 className="dash-gantt-job-content"
                 data-level={level}
-            >
-                {item.children && (
-                    <button
-                        onClick={() => toggleRow(item.id)}
-                        className="dash-gantt-caret"
-                        aria-label={expandedRows[item.id] ? "Collapse" : "Expand"}
-                    >
-                        {expandedRows[item.id] ? '▼' : '►'}
-                    </button>
-                )}
-                {item.icon && (
-                    <img 
-                        src={item.icon} 
-                        alt="" 
-                        className="dash-gantt-job-icon"
-                    />
-                )}
-                <span className="dash-gantt-job-name">{item.name}</span>
-            </div>
-        </div>
-    );
+                        >
+                            {/* Caret container - always present for consistent spacing */}
+                            <div className="dash-gantt-caret-container">
+                                {item.children && (
+                                    <button
+                                        onClick={() => toggleRow(item.id)}
+                                        className="dash-gantt-caret"
+                                        aria-label={expandedRows[item.id] ? "Collapse" : "Expand"}
+                                    >
+                                        {expandedRows[item.id] ? '▼' : '►'}
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Content wrapper for job name and icon */}
+                            <div className="dash-gantt-job-content-wrapper">
+                                {item.icon && (
+                                    <img 
+                                        src={item.icon} 
+                                        alt="" 
+                                        className="dash-gantt-job-icon"
+                                    />
+                                )}
+                                <span className="dash-gantt-job-name">{item.name}</span>
+                            </div>
+                        </div>
+                    </div>
+                );
 
     /**
      * Recursively renders the hierarchical job list.
