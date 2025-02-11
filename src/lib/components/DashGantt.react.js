@@ -53,10 +53,49 @@ const DashGantt = ({
     const [scrollLeft, setScrollLeft] = useState(0);
     const [currentTimePosition, setCurrentTimePosition] = useState(0);
     const [tooltip, setTooltip] = useState({ content: '', visible: false, x: 0, y: 0 });
+    const [jobsPanelWidth, setJobsPanelWidth] = useState(250);
+    const [isResizing, setIsResizing] = useState(false);
+
     const tooltipRef = useRef(null);
     const timelineRef = useRef(null);
     const jobsRef = useRef(null);
     const isScrolling = useRef(false);
+    const resizeRef = useRef(null);
+
+    // Jobs panel resize handlers
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            if (!isResizing) return;
+            
+            // Calculate new width, with min and max constraints
+            const newWidth = Math.max(150, Math.min(800, e.clientX));
+            setJobsPanelWidth(newWidth);
+            
+            // Prevent text selection during resize
+            e.preventDefault();
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+            document.body.style.cursor = 'default';
+        };
+
+        if (isResizing) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isResizing]);
+
+    const handleResizeStart = (e) => {
+        setIsResizing(true);
+        document.body.style.cursor = 'col-resize';
+        e.preventDefault();
+    };
 
     useEffect(() => {
         if (currentTime) {
@@ -288,6 +327,8 @@ const DashGantt = ({
                 columnWidth={columnWidth}
                 headerHeight={48}
                 scrollLeft={scrollLeft}
+                titleWidth={jobsPanelWidth}
+                styles={styles}
             />
             
             <div className="dash-gantt-content">
@@ -296,9 +337,18 @@ const DashGantt = ({
                     ref={jobsRef}
                     className="dash-gantt-jobs"
                     onScroll={handleScroll}
+                    style={{ width: jobsPanelWidth }}
                 >
                     {renderHierarchicalData(data)}
                 </div>
+
+                {/* Jobs panel resize handler */}
+                <div
+                    ref={resizeRef}
+                    className="dash-gantt-resize-handle"
+                    onMouseDown={handleResizeStart}
+                    style={{ left: `${jobsPanelWidth}px` }}
+                />
 
                 {/* Timeline section */}
                 <div 

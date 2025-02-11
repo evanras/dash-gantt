@@ -1,5 +1,6 @@
 import dash_gantt
-from dash import Dash, html
+import dash
+from dash import Dash, html, Input, Output, dcc
 from datetime import datetime, timedelta
 
 app = Dash(__name__)
@@ -115,6 +116,7 @@ data2 = [
 ]
 
 app.layout = html.Div([
+    dcc.Interval(id="interval", interval=65 * 10),
     dash_gantt.DashGantt(
         id='gantt-chart',
         data=data,
@@ -125,7 +127,7 @@ app.layout = html.Div([
         timeScale={
             "unit": "minutes",
             "value": 30,
-            "format": "HH:mm"
+            "format": "DD/MM HH:mm"
         },
         colorMapping={
             "key": "status",
@@ -143,10 +145,30 @@ app.layout = html.Div([
         maxHeight="600px",
         styles={
             "container": {"color": "black"},
-            "currentTime": {"background-color": "transparent", "border-left": "2px dotted black"}
+            "currentTime": {"background-color": "transparent", "border-left": "2px dotted black"},
+            "timeCell": {"text-align": "center", "background-color": "#f8fafc", "text-color": "black", "background": "black"},
         },
     )
 ], style={"height": "200px"})
+
+
+@app.callback(
+    Output("gantt-chart", "styles"),
+    [Input("interval", "n_intervals")]
+)
+def update_inner_dash_gantt_component(n_intervals) -> dict[str, str]:
+    # ctx = dash.callback_context
+    # print(ctx)
+    # print(ctx.__dict__)
+    possible_colors = ["red", "green", "purple", "black", "orange", "yellow"]
+    color = possible_colors[n_intervals] if n_intervals is not None and n_intervals < 6 else "light blue"
+    text_color = "black" if color != "black" else "white"
+    return {
+        "container": {"color": color},
+        "currentTime": {"background-color": color, "border-left": f"2px dotted {color}"},
+        "timeCell": {"text-align": "right", "background-color": color, "color": text_color},
+    }
+
 
 if __name__ == '__main__':
     app.run(debug=True)
