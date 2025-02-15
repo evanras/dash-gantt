@@ -111,6 +111,27 @@ data = [
             }
         ]
     },
+    {
+        'id': 'telemetry-memory-usage',
+        'name': 'Memory Usage', 
+        'displayType': 'line', 
+        "dates": [
+                    "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", 
+                    "2023-10-01 14:20", "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", 
+                    "2023-10-01 14:40", "2023-10-01 14:45", "2023-10-01 14:50", "2023-10-01 14:55", 
+                    "2023-10-01 15:00", "2023-10-01 15:45", "2023-10-01 15:50", "2023-10-01 15:55", 
+                    "2023-10-01 16:05"
+        ],
+        "values": [
+            10, 25, 36, 10,
+            35, 45, 95, 99,
+            41, 2, 4, 4, 12,
+            36, 58, 59, 89
+        ],
+        'color': '#007bff', 
+        'fill': {'enabled': True, 'gradient': {'startOpacity': 1, 'endOpacity': 0.1}}, 
+        'children': None
+    }
 ]
 
 data2 = [
@@ -134,11 +155,76 @@ data2 = [
     },
 ]
 
+
+data3 = [
+    {
+        "id": "another_one",
+        "name": "Another One",
+        "status": "completed",
+        "start": "2023-10-01 6:00",
+        "end": "2023-10-01 22:30",
+        "label": "Another One",
+        "progress": 100,
+        "children": [
+            {
+                "id": "third",
+                "name": "third one",
+                "status": "failed",
+                "start": "2023-10-01 14:28",
+                "end": "2023-10-01 14:52",  # TODO: time is not 
+                "label": "third One",
+                "children": [
+                    {
+                        "id": "fourth",
+                        "name": "fourth one",
+                        "status": "failed",
+                        "start": "2023-10-01 14:28",
+                        "end": "2023-10-01 14:52",  # TODO: time is not 
+                        "label": "fourth One",
+                        "children": [
+                            {
+                                "id": "fifth",
+                                "name": "fifth one",
+                                "status": "failed",
+                                "start": "2023-10-01 14:28",
+                                "end": "2023-10-01 14:52",  # TODO: time is not 
+                                "label": "fifth One",
+                                "children": [
+                                    {
+                                        "id": "six",
+                                        "name": "six one",
+                                        "status": "failed",
+                                        "start": "2023-10-01 14:28",
+                                        "end": "2023-10-01 14:52",  # TODO: time is not 
+                                        "label": "six One",
+                                        "children": [
+                                            {
+                                                "id": "seven",
+                                                "name": "seven one",
+                                                "status": "failed",
+                                                "start": "2023-10-01 14:28",
+                                                "end": "2023-10-01 14:52",  # TODO: time is not 
+                                                "label": "seven One",
+                                                "children": data
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            } 
+        ]
+    } 
+]
+
+
 app.layout = html.Div([
     dcc.Interval(id="interval", interval=65 * 10),
     dash_gantt.DashGantt(
         id='gantt-chart',
-        data=data,
+        data=data3,
         title="Jobs",
         startDate="2023-10-01 14:00",
         endDate="2023-10-01 20:12",
