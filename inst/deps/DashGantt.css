@@ -167,6 +167,11 @@
 .dash-gantt-job-content[data-level="1"] { padding-left: 24px; }
 .dash-gantt-job-content[data-level="2"] { padding-left: 48px; }
 .dash-gantt-job-content[data-level="3"] { padding-left: 72px; }
+.dash-gantt-job-content[data-level="4"] { padding-left: 96px; }
+.dash-gantt-job-content[data-level="5"] { padding-left: 120px; }
+.dash-gantt-job-content[data-level="6"] { padding-left: 144px; }
+.dash-gantt-job-content[data-level="7"] { padding-left: 168px; }
+.dash-gantt-job-content[data-level="8"] { padding-left: 192px; }
 
 .dash-gantt-caret {
     width: 16px;
@@ -231,6 +236,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
+    height: 100%;
     width: 2px;
     background-color: #ef4444;
     z-index: 3;
@@ -378,6 +384,11 @@
     .dash-gantt-job-content[data-level="1"] { padding-left: 32px; }
     .dash-gantt-job-content[data-level="2"] { padding-left: 48px; }
     .dash-gantt-job-content[data-level="3"] { padding-left: 64px; }
+    .dash-gantt-job-content[data-level="4"] { padding-left: 80px; }
+    .dash-gantt-job-content[data-level="5"] { padding-left: 96px; }
+    .dash-gantt-job-content[data-level="6"] { padding-left: 112px; }
+    .dash-gantt-job-content[data-level="7"] { padding-left: 128px; }
+    .dash-gantt-job-content[data-level="8"] { padding-left: 144px; }
 
     .dash-gantt-title,
     .dash-gantt-jobs {
