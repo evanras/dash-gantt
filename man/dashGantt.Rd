@@ -6,14 +6,15 @@
 \title{DashGantt component}
 
 \description{
-DashGantt is a React component that creates an interactive Gantt chart. It supports hierarchical data, timeline visualization, and both bar and line chart representations. Features include horizontal scrolling, expandable rows, and configurable styling.  @component @param {Object} props @param {string} [props.id] - Component identifier for Dash callbacks @param {Array<Object>} props.data - Hierarchical data structure for the Gantt chart @param {string} [props.title="Jobs"] - Title displayed in the left column @param {Date|string} props.startDate - Start date for the timeline @param {Date|string} props.endDate - End date for the timeline @param {Date|string} [props.currentTime] - Current time for timeline indicator @param {Object} props.timeScale - Configuration for timeline intervals @param {number} [props.columnWidth=100] - Width of timeline columns in pixels @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component @param {Object} [props.colorMapping] - Configuration for mapping data values to colors @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips @param {Object} [props.styles] - Custom styles for component parts @param {Object} [props.classNames] - Custom CSS classes @param {Function} [props.setProps] - Dash callback property
+DashGantt is a React component that creates an interactive Gantt chart. It supports hierarchical data, timeline visualization, and both bar and line chart representations. Features include horizontal scrolling, expandable rows, and configurable styling.  @component @param {Object} props @param {string} [props.id] - Component identifier for Dash callbacks @param {Array<Object>} props.data - Hierarchical data structure for the Gantt chart @param {string} [props.title="Jobs"] - Title displayed in the left column @param {Date|string} props.startDate - Start date for the timeline @param {Date|string} props.endDate - End date for the timeline @param {Date|string} [props.currentTime] - Current time for timeline indicator @param {Object} props.timeScale - Configuration for timeline intervals @param {number} [props.columnWidth=100] - Width of timeline columns in pixels @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component @param {Object} [props.colorMapping] - Configuration for mapping data values to colors @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips @param {Object} [props.expandedRowsData={}] - Current expanded state of rows @param {Object} [props.lastExpandedRow] - Information about the last row expanded/collapsed @param {Object} [props.styles] - Custom styles for component parts @param {Object} [props.classNames] - Custom CSS classes @param {Function} [props.setProps] - Dash callback property
 }
 
 \usage{
 dashGantt(id=NULL, classNames=NULL, colorMapping=NULL,
 columnWidth=NULL, currentTime=NULL, data=NULL, endDate=NULL,
-maxHeight=NULL, startDate=NULL, styles=NULL, timeScale=NULL,
-title=NULL, tooltipFields=NULL)
+expandedRowsData=NULL, lastExpandedRow=NULL, maxHeight=NULL,
+startDate=NULL, styles=NULL, timeScale=NULL, title=NULL,
+tooltipFields=NULL)
 }
 
 \arguments{
@@ -54,6 +55,13 @@ those elements have the following types:
   - color (character; optional)s. Required data structure defining the Gantt chart}
 
 \item{endDate}{Character. Required end date for the timeline}
+
+\item{expandedRowsData}{Named list. Current expanded state of rows, mapping row IDs to boolean expanded state}
+
+\item{lastExpandedRow}{Lists containing elements 'id', 'expanded'.
+those elements have the following types:
+  - id (character | numeric; optional)
+  - expanded (logical; optional). Information about the last row that was expanded or collapsed}
 
 \item{maxHeight}{Character | numeric. Optional maximum height of the component}
 

@@ -24,6 +24,8 @@ and configurable styling.
 @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component
 @param {Object} [props.colorMapping] - Configuration for mapping data values to colors
 @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips
+@param {Object} [props.expandedRowsData={}] - Current expanded state of rows
+@param {Object} [props.lastExpandedRow] - Information about the last row expanded/collapsed
 @param {Object} [props.styles] - Custom styles for component parts
 @param {Object} [props.classNames] - Custom CSS classes
 @param {Function} [props.setProps] - Dash callback property
@@ -59,6 +61,11 @@ Those elements have the following types:
   - `values` (Array of Reals; optional)
   - `color` (String; optional)s
 - `endDate` (String; required): Required end date for the timeline
+- `expandedRowsData` (Dict; optional): Current expanded state of rows, mapping row IDs to boolean expanded state
+- `lastExpandedRow` (optional): Information about the last row that was expanded or collapsed. lastExpandedRow has the following type: lists containing elements 'id', 'expanded'.
+Those elements have the following types:
+  - `id` (String | Real; optional)
+  - `expanded` (Bool; optional)
 - `maxHeight` (String | Real; optional): Optional maximum height of the component
 - `startDate` (String; required): Required start date for the timeline
 - `styles` (optional): Optional custom styles for component parts. styles has the following type: lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskBar', 'timeCell', 'caretButton', 'currentTime'.
@@ -80,7 +87,7 @@ Those elements have the following types:
 - `tooltipFields` (Array of Strings; optional): Optional fields to display in tooltips
 """
 function dashgantt(; kwargs...)
-        available_props = Symbol[:id, :classNames, :colorMapping, :columnWidth, :currentTime, :data, :endDate, :maxHeight, :startDate, :styles, :timeScale, :title, :tooltipFields]
+        available_props = Symbol[:id, :classNames, :colorMapping, :columnWidth, :currentTime, :data, :endDate, :expandedRowsData, :lastExpandedRow, :maxHeight, :startDate, :styles, :timeScale, :title, :tooltipFields]
         wild_props = Symbol[]
         return Component("dashgantt", "DashGantt", "dash_gantt", available_props, wild_props; kwargs...)
 end

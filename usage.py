@@ -1,6 +1,6 @@
 import dash_gantt
 import dash
-from dash import Dash, html, Input, Output, dcc
+from dash import Dash, html, Input, Output, dcc, State
 from datetime import datetime, timedelta
 
 app = Dash(__name__)
@@ -35,14 +35,14 @@ data = [
                 "end": "2023-10-01 14:37",
                 "label": "Extraction"
             },
-            {
-                "id": "second_one",
-                "name": "second one",
-                "status": "failed",
-                "start": "2023-10-01 14:28",
-                "end": "2023-10-01 14:52",  # TODO: time is not 
-                "label": "Second One"
-            }
+            # {
+            #     "id": "second_one",
+            #     "name": "second one",
+            #     "status": "failed",
+            #     "start": "2023-10-01 14:28",
+            #     "end": "2023-10-01 14:52",  # TODO: time is not 
+            #     "label": "Second One"
+            # }
         ]
     },
     {
@@ -224,7 +224,7 @@ app.layout = html.Div([
     dcc.Interval(id="interval", interval=65 * 10),
     dash_gantt.DashGantt(
         id='gantt-chart',
-        data=data3,
+        data=data,
         title="Jobs",
         startDate="2023-10-01 14:00",
         endDate="2023-10-01 20:12",
@@ -255,6 +255,33 @@ app.layout = html.Div([
         },
     )
 ])  #, style={"height": "200px"})
+
+@app.callback(
+    Output("gantt-chart", "data"),
+    Input("gantt-chart", "lastExpandedRow"),
+    # State("gantt-chart", "data"),
+    prevent_initial_call=True
+)
+def show_expansion_info(expanded_row_info):
+    print(f"ID of last expanded row: {expanded_row_info}")
+    if not expanded_row_info:
+        return "No expansion event yet"
+    
+    row_id = expanded_row_info["id"]
+    is_expanded = expanded_row_info["expanded"]
+    action = "expanded" if is_expanded else "collapsed"
+
+    data[1]["children"].append(
+        {
+            "id": "second_one",
+            "name": "second one",
+            "status": "failed",
+            "start": "2023-10-01 14:28",
+            "end": "2023-10-01 14:52",  # TODO: time is not 
+            "label": "Second One"
+        }
+    )
+    return data
 
 
 # @app.callback(
