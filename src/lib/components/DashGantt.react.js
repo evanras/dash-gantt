@@ -29,6 +29,8 @@ import TimelineContent from './internal/GanttTimeline/TimelineContent';
  * @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component
  * @param {Object} [props.colorMapping] - Configuration for mapping data values to colors
  * @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips
+ * @param {Object} [props.expandedRowsData={}] - Current expanded state of rows
+ * @param {Object} [props.lastExpandedRow] - Information about the last row expanded/collapsed
  * @param {Object} [props.styles] - Custom styles for component parts
  * @param {Object} [props.classNames] - Custom CSS classes
  * @param {Function} [props.setProps] - Dash callback property
@@ -47,9 +49,10 @@ const DashGantt = ({
     tooltipFields,
     styles = {},
     classNames = {},
+    expandedRowsData = {},
     setProps
 }) => {
-    const [expandedRows, setExpandedRows] = useState({});
+    const [expandedRows, setExpandedRows] = useState(expandedRowsData);
     const [scrollLeft, setScrollLeft] = useState(0);
     const [currentTimePosition, setCurrentTimePosition] = useState(0);
     const [tooltip, setTooltip] = useState({ content: '', visible: false, x: 0, y: 0 });
@@ -161,10 +164,25 @@ const DashGantt = ({
      * @param {string|number} id - Unique identifier of the row
      */
     const toggleRow = (id) => {
-        setExpandedRows(prev => ({
-            ...prev,
-            [id]: !prev[id]
-        }));
+        // Create the new state
+        const newExpandedRows = {
+            ...expandedRows,
+            [id]: !expandedRows[id]
+        };
+        
+        // Update internal React state
+        setExpandedRows(newExpandedRows);
+        
+        // Send data back to Dash
+        if (setProps) {
+            setProps({
+                expandedRowsData: newExpandedRows,
+                lastExpandedRow: {
+                    id: id,
+                    expanded: newExpandedRows[id]
+                }
+            });
+        }
     };
 
     /**
@@ -455,6 +473,15 @@ DashGantt.propTypes = {
     /** Optional fields to display in tooltips */
     tooltipFields: PropTypes.arrayOf(PropTypes.string),
 
+    /** Current expanded state of rows, mapping row IDs to boolean expanded state */
+    expandedRowsData: PropTypes.object,
+
+    /** Information about the last row that was expanded or collapsed */
+    lastExpandedRow: PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        expanded: PropTypes.bool
+    }),
+
     /** Optional custom styles for component parts */
     styles: PropTypes.shape({
         container: PropTypes.object,
@@ -492,6 +519,7 @@ DashGantt.defaultProps = {
         format: 'HH:mm'
     },
     tooltipFields: ['name', 'status'],
+    expandedRowsData: {},
     colorMapping: {
         key: 'status',
         map: {

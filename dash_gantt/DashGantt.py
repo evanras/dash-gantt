@@ -23,6 +23,8 @@ and configurable styling.
 @param {string|number} [props.maxHeight='80vh'] - Maximum height of the component
 @param {Object} [props.colorMapping] - Configuration for mapping data values to colors
 @param {Array<string>} [props.tooltipFields] - Fields to display in tooltips
+@param {Object} [props.expandedRowsData={}] - Current expanded state of rows
+@param {Object} [props.lastExpandedRow] - Information about the last row expanded/collapsed
 @param {Object} [props.styles] - Custom styles for component parts
 @param {Object} [props.classNames] - Custom CSS classes
 @param {Function} [props.setProps] - Dash callback property
@@ -98,6 +100,19 @@ Keyword arguments:
 - endDate (string; required):
     Required end date for the timeline.
 
+- expandedRowsData (dict; optional):
+    Current expanded state of rows, mapping row IDs to boolean
+    expanded state.
+
+- lastExpandedRow (dict; optional):
+    Information about the last row that was expanded or collapsed.
+
+    `lastExpandedRow` is a dict with keys:
+
+    - id (string | number; optional)
+
+    - expanded (boolean; optional)
+
 - maxHeight (string | number; default '80vh'):
     Optional maximum height of the component.
 
@@ -146,10 +161,10 @@ Keyword arguments:
     _namespace = 'dash_gantt'
     _type = 'DashGantt'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, styles=Component.UNDEFINED, classNames=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'classNames', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+    def __init__(self, id=Component.UNDEFINED, data=Component.REQUIRED, title=Component.UNDEFINED, startDate=Component.REQUIRED, endDate=Component.REQUIRED, currentTime=Component.UNDEFINED, timeScale=Component.UNDEFINED, columnWidth=Component.UNDEFINED, maxHeight=Component.UNDEFINED, colorMapping=Component.UNDEFINED, tooltipFields=Component.UNDEFINED, expandedRowsData=Component.UNDEFINED, lastExpandedRow=Component.UNDEFINED, styles=Component.UNDEFINED, classNames=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'classNames', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'expandedRowsData', 'lastExpandedRow', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'classNames', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
+        self.available_properties = ['id', 'classNames', 'colorMapping', 'columnWidth', 'currentTime', 'data', 'endDate', 'expandedRowsData', 'lastExpandedRow', 'maxHeight', 'startDate', 'styles', 'timeScale', 'title', 'tooltipFields']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
