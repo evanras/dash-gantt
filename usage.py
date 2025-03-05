@@ -2,6 +2,7 @@ import dash_gantt
 import dash
 from dash import Dash, html, Input, Output, dcc, State
 from datetime import datetime, timedelta
+import time
 
 app = Dash(__name__)
 
@@ -13,6 +14,7 @@ data = [
     {
         "id": "source_analysis",
         "name": "Source Data Analysis",
+        "icon": "bi bi-1-circle",
         "status": "completed",
         "start": "2023-10-01 14:00",
         "end": "2023-10-01 14:30",
@@ -20,15 +22,16 @@ data = [
         "progress": 100
     },
     {
-        "id": "data_load",
+        "id": "job id = 1, data_load",
         "name": "Data Load",
+        "icon": "https://img.icons8.com/?size=100&id=bQUXBvTNh8MI&format=png&color=000000.png",
         "start": "2023-10-01 14:11",
         "end": "2023-10-01 14:52",
         "status": "failed",
         "label": "Data Load",
         "children": [
             {
-                "id": "extract",
+                "id": "tak orchestrator, task id =1 ",
                 "name": "Extract",
                 "status": "completed",
                 "start": "2023-10-01 14:11",
@@ -219,6 +222,29 @@ data3 = [
     } 
 ]
 
+inner1 = {
+    "id": "jobkey1",
+    "name": "job one",
+    "status": "failed",
+    "start": "2023-10-01 14:28",
+    "end": "2023-10-01 14:52",  
+    "label": "job One",
+    "children": []
+}
+
+inner2 = {
+    "id": "jobkey2",
+    "name": "job two",
+    "status": "failed",
+    "start": "2023-10-01 14:28",
+    "end": "2023-10-01 14:52",  # TODO: time is not 
+    "label": "job One",
+    "children": []
+}
+
+data_store = {"jobkey1": inner1, "jobkey2": inner2}
+data_struct = [data_store["jobkey1"], data_store["jobkey2"]]
+
 
 app.layout = html.Div([
     dcc.Interval(id="interval", interval=65 * 10),
@@ -253,35 +279,43 @@ app.layout = html.Div([
             "currentTime": {"backgroundColor": "transparent", "border-left": "2px dotted black"},
             "timeCell": {"text-align": "center", "backgroundColor": "#f8fafc", "color": "white", "background": "black"},
         },
-    )
+    ),
+    dcc.Store(id="data-lookup", data=data_store),
 ])  #, style={"height": "200px"})
 
-@app.callback(
-    Output("gantt-chart", "data"),
-    Input("gantt-chart", "lastExpandedRow"),
-    # State("gantt-chart", "data"),
-    prevent_initial_call=True
-)
-def show_expansion_info(expanded_row_info):
-    print(f"ID of last expanded row: {expanded_row_info}")
-    if not expanded_row_info:
-        return "No expansion event yet"
+# @app.callback(
+#     Output("gantt-chart", "data"),
+#     Input("gantt-chart", "lastExpandedRow"),
+#     Input("data-lookup", "data"),
+#     State("gantt-chart", "data"),
+#     # State("data-lookup", "data"),
+#     prevent_initial_call=True
+# )
+# def show_expansion_info(expanded_row_info, data_lookup, gantt_data):
+#     print(f"ID of last expanded row: {expanded_row_info}. \n sleeping for 2 seconds.")
+#     # time.sleep(0.3)
+#     if not expanded_row_info:
+#         return "No expansion event yet"
+#     data_lookup_key = expanded_row_info["id"]
     
-    row_id = expanded_row_info["id"]
-    is_expanded = expanded_row_info["expanded"]
-    action = "expanded" if is_expanded else "collapsed"
+#     print(f"Data lookup: {data_lookup}")
 
-    data[1]["children"].append(
-        {
-            "id": "second_one",
-            "name": "second one",
-            "status": "failed",
-            "start": "2023-10-01 14:28",
-            "end": "2023-10-01 14:52",  # TODO: time is not 
-            "label": "Second One"
-        }
-    )
-    return data
+#     new_data_from_db = {
+#         "id": "childtask1",
+#         "name": "task one",
+#         "status": "failed",
+#         "start": "2023-10-01 14:28",
+#         "end": "2023-10-01 14:52",  
+#         "label": "job One",
+#         "children": []
+#     }
+#     data_lookup[data_lookup_key]["children"] = new_data_from_db
+
+#     # if len(data[1]["children"]) < 2:
+#     print(data_lookup)
+    
+        
+#     return gantt_data
 
 
 # @app.callback(
@@ -303,4 +337,4 @@ def show_expansion_info(expanded_row_info):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
