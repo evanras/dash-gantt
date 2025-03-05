@@ -285,11 +285,15 @@ const DashGantt = ({
                             {/* Content wrapper for job name and icon */}
                             <div className="dash-gantt-job-content-wrapper">
                                 {item.icon && (
-                                    <img 
-                                        src={item.icon} 
-                                        alt="" 
-                                        className="dash-gantt-job-icon"
-                                    />
+                                    item.icon.match(/\.(jpeg|jpg|gif|png|svg|webp)$/) ? (
+                                        <img 
+                                            src={item.icon} 
+                                            alt="" 
+                                            className="dash-gantt-job-icon"
+                                        />
+                                    ) : (
+                                        <div className={`dash-gantt-job-icon ${item.icon}`}></div>
+                                    )
                                 )}
                                 <span className="dash-gantt-job-name">{item.name}</span>
                             </div>
