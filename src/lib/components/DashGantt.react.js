@@ -65,6 +65,12 @@ const DashGantt = ({
     const isScrolling = useRef(false);
     const resizeRef = useRef(null);
 
+    // Update the expanded rows when the prop value is changed
+    useEffect(() => {
+        console.log('expandedRowsData prop changed:', expandedRowsData);
+        setExpandedRows(expandedRowsData);
+    }, [expandedRowsData]);
+
     // Jobs panel resize handlers
     useEffect(() => {
         const handleMouseMove = (e) => {
