@@ -1,6 +1,6 @@
 import dash_gantt
 import dash
-from dash import Dash, html, Input, Output, dcc, State
+from dash import Dash, html, Input, Output, dcc, State, set_props
 from datetime import datetime, timedelta
 import time
 
@@ -248,39 +248,44 @@ data_struct = [data_store["jobkey1"], data_store["jobkey2"]]
 
 app.layout = html.Div([
     dcc.Interval(id="interval", interval=65 * 10),
-    dash_gantt.DashGantt(
-        id='gantt-chart',
-        data=data,
-        title="Jobs",
-        startDate="2023-10-01 14:00",
-        endDate="2023-10-01 20:12",
-        currentTime=current_time,  # Vertical line at 3 PM
-        timeScale={
-            "unit": "minutes",
-            "value": 30,
-            "format": "DD/MM HH:mm"
-        },
-        colorMapping={
-            "key": "status",
-            "map": {
-                "completed": "#4CAF50",  # Green
-                "in_progress": "#FFA726", # Orange
-                "running": "#2196F3",     # Blue
-                "failed": "red",
-                "queued": "gray"
-            }
-        },
-        tooltipFields=["status", "progress", "start", "end"],
-        # lineGraphData=line_graph_data,
-        columnWidth=100,
-        maxHeight="600px",
-        styles={
-            "container": {"color": "black"},
-            "currentTime": {"backgroundColor": "transparent", "border-left": "2px dotted black"},
-            "timeCell": {"text-align": "center", "backgroundColor": "#f8fafc", "color": "white", "background": "black"},
-        },
-    ),
-    dcc.Store(id="data-lookup", data=data_store),
+    html.Button(id="button"),
+    html.Div(
+        id="gantt-container",
+        children=[
+            dash_gantt.DashGantt(
+                id='gantt-chart',
+                data=data,
+                title="Jobs",
+                startDate="2023-10-01 14:00",
+                endDate="2023-10-01 20:12",
+                currentTime=current_time,  # Vertical line at 3 PM
+                timeScale={
+                    "unit": "minutes",
+                    "value": 30,
+                    "format": "DD/MM HH:mm"
+                },
+                colorMapping={
+                    "key": "status",
+                    "map": {
+                        "completed": "#4CAF50",  # Green
+                        "in_progress": "#FFA726", # Orange
+                        "running": "#2196F3",     # Blue
+                        "failed": "red",
+                        "queued": "gray"
+                    }
+                },
+                tooltipFields=["status", "progress", "start", "end"],
+                # lineGraphData=line_graph_data,
+                columnWidth=100,
+                maxHeight="600px",
+                styles={
+                    "container": {"color": "black"},
+                    "currentTime": {"backgroundColor": "transparent", "border-left": "2px dotted black"},
+                    "timeCell": {"text-align": "center", "backgroundColor": "#f8fafc", "color": "white", "background": "black"},
+                },
+            ),
+        ]
+    )
 ])  #, style={"height": "200px"})
 
 # @app.callback(
@@ -318,22 +323,23 @@ app.layout = html.Div([
 #     return gantt_data
 
 
+@app.callback(
+    Output("button", "children"),
+    [Input("button", "n_clicks")],
+    prevent_initial_call=True
+)
+def update_inner_dash_gantt_component(n_clicks):
+    set_props("gantt-chart", {"expandedRowsData": {}})
+    return "Button"
+
 # @app.callback(
-#     Output("gantt-chart", "styles"),
-#     [Input("interval", "n_intervals")]
+#     Output("gantt-container", "children"),
+#     [Input("button", "n_clicks")],
+#     prevent_initial_call=True
 # )
-# def update_inner_dash_gantt_component(n_intervals) -> dict[str, str]:
-#     # ctx = dash.callback_context
-#     # print(ctx)
-#     # print(ctx.__dict__)
-#     possible_colors = ["red", "green", "purple", "black", "orange", "yellow"]
-#     color = possible_colors[n_intervals] if n_intervals is not None and n_intervals < 6 else "light blue"
-#     text_color = "black" if color != "black" else "white"
-#     return {
-#         # "container": {"color": color},
-#         # "currentTime": {"background-color": color, "border-left": f"2px dotted {color}"},
-#         # "timeCell": {"text-align": "right", "background-color": color, "color": text_color},
-#     }
+# def update_inner_dash_gantt_component(n_clicks) -> dict[str, str]:
+    
+              
 
 
 if __name__ == '__main__':

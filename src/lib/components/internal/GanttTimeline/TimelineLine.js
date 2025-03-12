@@ -57,7 +57,6 @@ const TimelineLine = ({
     fill = {}
 }) => {
     // Destructure fill options with defaults
-    console.log('FILL: ', fill)
     const {
         enabled: fillEnabled = false,
         color: fillColor = color,
@@ -67,11 +66,9 @@ const TimelineLine = ({
             endOpacity: 0.1
         }
     } = fill;
-    console.log("Second FILL: ", fill)
 
     // Generate unique gradient ID to prevent conflicts when multiple charts are present
     const gradientId = `gradient-${color.replace('#', '')}-${position}`;
-    console.log("GRADIENT_ID", gradientId)
 
     return (
         <div 
