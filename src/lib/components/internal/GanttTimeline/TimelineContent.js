@@ -16,6 +16,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TimelineBar from './TimelineBar';
 import TimelineLine from './TimelineLine';
+import TimelineBarGradient from './TimelineBarGradients';
+import TimelineBarGradientRight from './TimelineBarGradientRight';
 
 /**
  * Safely maps line chart data with validation
@@ -122,6 +124,28 @@ const TimelineContent = ({
                                 />
                             );
                         })()
+                    ) : item.displayType === 'gradient-right' ? (
+                        item.start && item.end && (
+                            <TimelineBarGradientRight
+                                item={item}
+                                position={calculatePosition(item.start)}
+                                width={calculateWidth(item.start, item.end)}
+                                color={getItemColor(item)}
+                                label={item.label}
+                                tooltipContent={generateTooltip(item)}
+                            />
+                        )
+                    ) : item.displayType === 'gradient' ? (
+                        item.start && item.end && (
+                            <TimelineBarGradient
+                                item={item}
+                                position={calculatePosition(item.start)}
+                                width={calculateWidth(item.start, item.end)}
+                                color={getItemColor(item)}
+                                label={item.label}
+                                tooltipContent={generateTooltip(item)}
+                            />
+                        )
                     ) : (
                         item.start && item.end && (
                             <TimelineBar
