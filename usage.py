@@ -7,7 +7,7 @@ import time
 app = Dash(__name__)
 
 current_time = "2023-10-01 16:44"
-current_time = datetime(2023, 10, 1, 16, 44)
+current_time = datetime(2023, 10, 1, 17, 53)
 
 # Sample data for the Gantt chart
 data = [
@@ -38,14 +38,32 @@ data = [
                 "end": "2023-10-01 14:37",
                 "label": "Extraction"
             },
-            # {
-            #     "id": "second_one",
-            #     "name": "second one",
-            #     "status": "failed",
-            #     "start": "2023-10-01 14:28",
-            #     "end": "2023-10-01 14:52",  # TODO: time is not 
-            #     "label": "Second One"
-            # }
+            {
+                "id": "second_one",
+                "name": "second one",
+                "status": "failed",
+                "start": "2023-10-01 14:28",
+                "end": "2023-10-01 14:52",  # TODO: time is not 
+                "label": "Second One",
+                "children": [
+                    {
+                        "id": "tak asdforchestrator, task id =1 ",
+                        "name": "Extract",
+                        "status": "completed",
+                        "start": "2023-10-01 14:11",
+                        "end": "2023-10-01 14:37",
+                        "label": "Extraction"
+                    },
+                    {
+                        "id": "sedfsdcond_one",
+                        "name": "second one",
+                        "status": "failed",
+                        "start": "2023-10-01 14:28",
+                        "end": "2023-10-01 14:52",  # TODO: time is not 
+                        "label": "Second One"
+                    }
+                ]   
+            }
         ]
     },
     {
@@ -54,14 +72,42 @@ data = [
         "status": "running",
         "start": "2023-10-01 15:45",
         "end": current_time, 
-        "label": "Pipeline"
+        "label": "Pipeline",
+        "displayType": "gradient-right"
     },
     {
         "id": "queued_job",
         "name": "Queued Job",
         "status": "queued",
         "start": current_time,
-        "end": "2023-10-01 16:55",
+        "end": "2023-10-01 19:06",
+        "displayType": "gradient"
+    },
+    {
+        "id": "seasdcond_one",
+        "name": "second one",
+        "status": "failed",
+        "start": "2023-10-01 14:28",
+        "end": "2023-10-01 14:52",  # TODO: time is not 
+        "label": "Second One",
+        "children": [
+            {
+                "id": "tak asdfosdfrchestrator, task id =1 ",
+                "name": "Extract",
+                "status": "completed",
+                "start": "2023-10-01 14:11",
+                "end": "2023-10-01 14:37",
+                "label": "Extraction"
+            },
+            {
+                "id": "sedfsdascond_one",
+                "name": "second one",
+                "status": "failed",
+                "start": "2023-10-01 14:28",
+                "end": "2023-10-01 14:52",  # TODO: time is not 
+                "label": "Second One"
+            }
+        ]   
     },
     {
         "id": "memory_usage",
