@@ -1,6 +1,6 @@
 {
   "name": "dash_gantt",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Create beautiful Gantt charts in Dash.",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "validate-init": "python _validate_init.py",
     "prepublishOnly": "npm run validate-init",
     "build:js": "webpack --mode production",
-    "build:backends": "dash-generate-components ./src/lib/components dash_gantt -p package-info.json --r-prefix '' --jl-prefix '' --ignore \\.test\\.",
+    "build:backends": "dash-generate-components ./src/lib/components/public dash_gantt -p package-info.json --r-prefix '' --jl-prefix '' --ignore \\.test\\.",
     "build:backends-activated": "(. venv/bin/activate || venv\\scripts\\activate && npm run build:backends)",
     "build": "npm run build:js && npm run build:backends",
     "build:activated": "npm run build:js && npm run build:backends-activated"

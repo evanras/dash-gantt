@@ -121,6 +121,7 @@ const TimelineContent = ({
                                     position={calculatePosition(item.dates[0])}
                                     width={calculateWidth(item.dates[0], item.dates[item.dates.length - 1])}
                                     fill={item.fill}
+                                    tooltip={{ enabled: true }}
                                 />
                             );
                         })()

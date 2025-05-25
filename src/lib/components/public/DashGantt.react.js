@@ -7,8 +7,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import HeaderRow from './internal/GanttHeader/HeaderRow';
-import TimelineContent from './internal/GanttTimeline/TimelineContent';
+import HeaderRow from '../internal/GanttHeader/HeaderRow';
+import TimelineContent from '../internal/GanttTimeline/TimelineContent';
 
 /**
  * DashGantt is a React component that creates an interactive Gantt chart.
@@ -67,7 +67,6 @@ const DashGantt = ({
 
     // Update the expanded rows when the prop value is changed
     useEffect(() => {
-        console.log('expandedRowsData prop changed:', expandedRowsData);
         setExpandedRows(expandedRowsData);
     }, [expandedRowsData]);
 
@@ -156,13 +155,20 @@ const DashGantt = ({
                 const timelineScroll = timelineRef.current.querySelector('.dash-gantt-timeline-scroll');
                 if (timelineScroll) {
                     timelineScroll.scrollTop = jobsRef.current.scrollTop;
+                    
+                    // On initial load, scroll to the right
+                    if (timelineScroll.scrollLeft === 0 && timelineScroll.scrollWidth > timelineScroll.clientWidth) {
+                        timelineScroll.scrollLeft = timelineScroll.scrollWidth - timelineScroll.clientWidth;
+                        setScrollLeft(timelineScroll.scrollLeft);
+                    }
                 }
             }
         };
 
+        syncScrollPositions();
         window.addEventListener('resize', syncScrollPositions);
         return () => window.removeEventListener('resize', syncScrollPositions);
-    }, []);
+    }, [totalWidth, data]);
 
     /**
      * Toggles the expanded/collapsed state of a hierarchical row.
