@@ -244,7 +244,7 @@ const DashGantt = ({
     const generateTooltip = (item) => {
         if (!tooltipFields) return item.name;
         return tooltipFields
-            .map(field => `<strong>${field}</strong>: ${item[field]}`)
+            .map(field => `${field}: ${item[field]}`)
             .join('\n');
     };
 
