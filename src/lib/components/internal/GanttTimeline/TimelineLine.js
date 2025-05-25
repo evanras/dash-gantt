@@ -98,16 +98,19 @@ const TimelineLine = ({
                             wrapperStyle={{ 
                                 zIndex: 9999,
                                 pointerEvents: 'none',
-                                // marginBottom: '0.2em',
                             }}
                             contentStyle={{
                                 backgroundColor: 'white',
                                 border: '1px solid #ccc',
-                                borderRadius: '4px',
+                                borderRadius: '2px',
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
                                 fontSize: '0.7em',
-                                paddingBottom: '0.2em',
+                                overflow: 'visible',
+                                zIndex: 9999,
                             }}
+                            allowEscapeViewBox={{ x: true, y: true }} 
+                            position={{ y: -10 }}
+                            offset={0}
                         />
                     )}
                     
@@ -129,34 +132,6 @@ const TimelineLine = ({
                     />
                 </AreaChart>
             </ResponsiveContainer>
-            
-            {/* CSS to fix tooltip clipping issues */}
-            {tooltipEnabled && (
-                <style dangerouslySetInnerHTML={{
-                    __html: `
-                        .recharts-tooltip-wrapper {
-                            z-index: 9999 !important;
-                            pointer-events: none !important;
-                        }
-                        
-                        .dash-gantt-line-chart {
-                            overflow: visible !important;
-                        }
-                        
-                        .dash-gantt-timeline-row {
-                            overflow: visible !important;
-                        }
-                        
-                        .dash-gantt-timeline-wrapper {
-                            overflow: visible !important;
-                        }
-                        
-                        .dash-gantt-timeline {
-                            overflow: visible !important;
-                        }
-                    `
-                }} />
-            )}
         </div>
     );
 };
