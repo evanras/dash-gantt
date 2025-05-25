@@ -10,86 +10,53 @@
  * @requires recharts
  */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { createPortal } from 'react-dom';
 import { LineChart, Line, YAxis, ResponsiveContainer, Area, AreaChart, Tooltip, XAxis } from 'recharts';
 
 /**
- * Portal tooltip component that renders outside the chart container
- * to avoid clipping by parent overflow settings
+ * Simple tooltip component that renders within the chart container
+ * Uses absolute positioning to avoid clipping issues
  */
-const PortalTooltip = ({ active, payload, label, staticTooltipFields, formatDate, formatValue, mousePosition, containerStyle }) => {
-    if (!active || !payload || !payload.length || !mousePosition) {
+const SimpleTooltip = ({ active, payload, label, staticTooltipFields, formatDate, formatValue, containerStyle }) => {
+    if (!active || !payload || !payload.length) {
         return null;
     }
 
     const data = payload[0].payload;
     const value = payload[0].value;
-
-    // Calculate optimal tooltip position to avoid viewport edges
-    const tooltipContent = (
+    
+    return (
         <div 
-            className="dash-gantt-line-tooltip-portal"
+            className="dash-gantt-line-tooltip-simple"
             style={{
-                position: 'fixed',
-                left: mousePosition.x + 10,
-                top: mousePosition.y - 10,
-                transform: 'translateY(-100%)', // Position above cursor
+                // position: 'relative', // Use fixed positioning to be sure it's visible
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -100%)',
                 zIndex: 99999,
                 pointerEvents: 'none',
+                // backgroundColor: 'red',
+                // color: 'black',
+                // padding: '20px',
+                // border: '3px solid black',
+                // fontSize: '1em',
+                // fontWeight: 'bold'
                 ...containerStyle
             }}
         >
-            <div className="tooltip-content">
-                {/* Dynamic content - date and value */}
-                <div className="tooltip-dynamic">
-                    <div className="tooltip-item">
-                        <span className="tooltip-label">Date: </span>
-                        <span className="tooltip-value">
-                            {formatDate ? formatDate(data.date) : data.date}
-                        </span>
-                    </div>
-                    <div className="tooltip-item">
-                        <span className="tooltip-label">Value: </span>
-                        <span className="tooltip-value">
-                            {formatValue ? formatValue(value) : value}
-                        </span>
-                    </div>
-                </div>
-                
-                {/* Static content - additional fields */}
-                {staticTooltipFields && staticTooltipFields.length > 0 && (
-                    <div className="tooltip-static">
-                        <div className="tooltip-divider"></div>
-                        {staticTooltipFields.map((field, index) => (
-                            <div key={index} className="tooltip-item">
-                                <span className="tooltip-label">{field.label}: </span>
-                                <span className="tooltip-value">{field.value}</span>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+            <div><strong>Date: </strong>{data.date}</div>
+            <div><strong>Value: </strong>{value}</div>
         </div>
     );
-
-    // Use portal to render tooltip at document.body level
-    return createPortal(tooltipContent, document.body);
 };
 
 /**
  * Invisible custom tooltip that captures hover data without rendering
- * The actual tooltip is rendered via portal
+ * The actual tooltip is rendered separately
  */
-const InvisibleTooltip = ({ active, payload, label, onTooltipChange, staticTooltipFields, formatDate, formatValue }) => {
-    useEffect(() => {
-        if (onTooltipChange) {
-            onTooltipChange({ active, payload, label, staticTooltipFields, formatDate, formatValue });
-        }
-    }, [active, payload, label, onTooltipChange, staticTooltipFields, formatDate, formatValue]);
-
-    return null; // This tooltip is invisible
+const InvisibleTooltip = ({ active, payload, label, staticTooltipFields, formatDate, formatValue }) => {
+    return null; // This tooltip is invisible, Recharts handles the hover detection
 };
 
 /**
@@ -148,8 +115,6 @@ const TimelineLine = ({
     fill = {},
     tooltip = {}
 }) => {
-    const [mousePosition, setMousePosition] = useState(null);
-    const [tooltipData, setTooltipData] = useState(null);
     // Destructure fill options with defaults
     const {
         enabled: fillEnabled = false,
@@ -163,7 +128,7 @@ const TimelineLine = ({
 
     // Destructure tooltip options with defaults
     const {
-        enabled: tooltipEnabled = true,
+        enabled: tooltipEnabled = true, // Changed default to true
         staticFields = [],
         formatDate,
         formatValue,
@@ -173,35 +138,13 @@ const TimelineLine = ({
     // Generate unique gradient ID to prevent conflicts when multiple charts are present
     const gradientId = `gradient-${color.replace('#', '')}-${position}`;
 
-    // Handle mouse move to track position for portal tooltip
-    const handleMouseMove = (e) => {
-        if (tooltipEnabled) {
-            setMousePosition({
-                x: e.clientX,
-                y: e.clientY
-            });
-        }
-    };
-
-    const handleMouseLeave = () => {
-        if (tooltipEnabled) {
-            setMousePosition(null);
-            setTooltipData(null);
-        }
-    };
-
-    // Handle tooltip data changes from Recharts
-    const handleTooltipChange = (data) => {
-        setTooltipData(data);
-    };
-
     // Default tooltip styles
     const defaultTooltipStyle = {
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
         border: '1px solid #ccc',
-        borderRadius: '4px',
+        borderRadius: '1px',
         padding: '8px 12px',
-        fontSize: '12px',
+        fontSize: '0.7em',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
         ...style
     };
@@ -211,10 +154,9 @@ const TimelineLine = ({
             className="dash-gantt-line-chart"
             style={{
                 left: `${position}%`,
-                width: `${width}%`
+                width: `${width}%`,
+                position: 'relative' // Ensure tooltip can be positioned relative to this
             }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
         >
             <ResponsiveContainer width="100%" height={40}>
                 <AreaChart data={data}>
@@ -246,23 +188,23 @@ const TimelineLine = ({
                     
                     <YAxis domain={[0, 100]} hide />
                     
-                    {/* Invisible tooltip component that captures data */}
+                    {/* Simple tooltip component */}
                     {tooltipEnabled && (
                         <Tooltip
                             content={({ active, payload, label }) => (
-                                <InvisibleTooltip
+                                <SimpleTooltip
                                     active={active}
                                     payload={payload}
                                     label={label}
-                                    onTooltipChange={handleTooltipChange}
                                     staticTooltipFields={staticFields}
                                     formatDate={formatDate}
                                     formatValue={formatValue}
+                                    containerStyle={defaultTooltipStyle}
                                 />
                             )}
                             cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: '3 3' }}
                             animationDuration={0}
-                            wrapperStyle={{ visibility: 'hidden' }} // Hide the default tooltip wrapper
+                            position={{ y: 0 }} // Position tooltip above the chart
                         />
                     )}
                     
@@ -285,60 +227,68 @@ const TimelineLine = ({
                 </AreaChart>
             </ResponsiveContainer>
             
-            {/* Portal tooltip rendered at document.body level */}
-            {tooltipEnabled && tooltipData && (
-                <PortalTooltip
-                    {...tooltipData}
-                    mousePosition={mousePosition}
-                    containerStyle={defaultTooltipStyle}
-                />
+            {/* CSS styles for simple tooltip */}
+            {tooltipEnabled && (
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                        .dash-gantt-line-tooltip-simple {
+                            z-index: 1000 !important;
+                            pointer-events: none !important;
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-content {
+                            min-width: 120px;
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-item {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 4px;
+                            gap: 8px;
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-item:last-child {
+                            margin-bottom: 0;
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-label {
+                            font-weight: 500;
+                            color: #666;
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-value {
+                            font-weight: 600;
+                            color: #333;
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-divider {
+                            height: 1px;
+                            background-color: #e0e0e0;
+                            margin: 6px 0;
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-dynamic {
+                            margin-bottom: ${staticFields.length > 0 ? '0' : '0'};
+                        }
+                        
+                        .dash-gantt-line-tooltip-simple .tooltip-static {
+                            margin-top: 2px;
+                        }
+
+                        /* Make sure the chart container allows tooltips to show */
+                        .dash-gantt-line-chart {
+                            position: relative;
+                            z-index: 1;
+                            overflow: visible;
+                        }
+
+                        /* Ensure recharts tooltip wrapper is visible */
+                        .recharts-tooltip-wrapper {
+                            z-index: 1000 !important;
+                        }
+                    `
+                }} />
             )}
-            
-            {/* CSS-in-JS styles for tooltip */}
-            <style jsx>{`
-                .dash-gantt-line-tooltip {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                }
-                
-                .tooltip-content {
-                    min-width: 120px;
-                }
-                
-                .tooltip-item {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 4px;
-                    gap: 8px;
-                }
-                
-                .tooltip-item:last-child {
-                    margin-bottom: 0;
-                }
-                
-                .tooltip-label {
-                    font-weight: 500;
-                    color: #666;
-                }
-                
-                .tooltip-value {
-                    font-weight: 600;
-                    color: #333;
-                }
-                
-                .tooltip-divider {
-                    height: 1px;
-                    background-color: #e0e0e0;
-                    margin: 6px 0;
-                }
-                
-                .tooltip-dynamic {
-                    margin-bottom: ${staticFields.length > 0 ? '0' : '0'};
-                }
-                
-                .tooltip-static {
-                    margin-top: 2px;
-                }
-            `}</style>
         </div>
     );
 };
@@ -430,7 +380,7 @@ TimelineLine.defaultProps = {
         }
     },
     tooltip: {
-        enabled: false,
+        enabled: true, // Changed default to true
         staticFields: [],
         style: {}
     }

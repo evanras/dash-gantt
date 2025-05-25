@@ -244,10 +244,10 @@ const DashGantt = ({
     const generateTooltip = (item) => {
         if (!tooltipFields) return item.name;
         return tooltipFields
-            .map(field => `${field}: ${item[field]}`)
+            .map(field => `<strong>${field}</strong>: ${item[field]}`)
             .join('\n');
     };
-
+s
     /**
      * Handles showing the tooltip at the mouse position
      * @param {Event} e - Mouse event
