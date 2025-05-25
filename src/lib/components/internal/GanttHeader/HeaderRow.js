@@ -39,6 +39,10 @@ const HeaderRow = ({
             resizeObserver.observe(headerRef.current);
         }
 
+        if (headerRef.current) {
+            scrollLeft = headerRef.current.scrollWidth;
+        }
+
         // Cleanup
         return () => {
             if (headerRef.current) {
@@ -46,6 +50,7 @@ const HeaderRow = ({
             }
             resizeObserver.disconnect();
         };
+
     }, []);
 
     /**

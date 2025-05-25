@@ -1,12 +1,11 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 export(DashGantt)
-export(HeaderRow)
-export(TimelineBar)
-export(TimelineLine)
 export(headerRow)
 export(dashGantt)
 export(timelineBar)
+export(timelineBarGradientRight)
 export(grid)
+export(timelineBarGradients)
 export(timelineRow)
 export(timelineLine)
