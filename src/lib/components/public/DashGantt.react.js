@@ -412,6 +412,8 @@ const DashGantt = ({
                                 getItemColor={getItemColor}
                                 generateTooltip={generateTooltip}
                                 expandedRows={expandedRows}
+                                onShowTooltip={handleShowTooltip}
+                                onHideTooltip={handleHideTooltip}
                             />
                         </div>
                     </div>
@@ -421,10 +423,19 @@ const DashGantt = ({
             <div 
                 ref={tooltipRef}
                 className={`dash-gantt-tooltip ${tooltip.visible ? 'visible' : ''}`}
-                style={{
+                style={{ display: tooltip.visible ? 'block' : 'none', ...(styles?.tooltip || {
+                    position: 'fixed',
                     left: `${tooltip.x}px`,
-                    top: `${tooltip.y}px`
-                }}
+                    top: `${tooltip.y}px`,
+                    backgroundColor: 'rgb(242, 241, 241)',
+                    color: 'black',
+                    padding: '4px 8px',
+                    borderRadius: '0',
+                    fontSize: '0.8rem',
+                    pointerEvents: 'none',
+                    zIndex: 1000,
+                    whiteSpace: 'pre-line',
+                }) }}
             >
                 {tooltip.content}
             </div>
@@ -507,7 +518,8 @@ DashGantt.propTypes = {
         taskBar: PropTypes.object,
         timeCell: PropTypes.object,
         caretButton: PropTypes.object,
-        currentTime: PropTypes.object
+        currentTime: PropTypes.object,
+        tooltip: PropTypes.object
     }),
 
     /** Optional custom CSS classes */

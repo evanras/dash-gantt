@@ -1,15 +1,14 @@
 /**
  * @fileoverview TimelineBarGradientRight component renders individual task bars in the Gantt chart
- * with configurable positioning, colors, and tooltips. The key distinction here is that the right 
+ * with configurable positioning, colors, and custom tooltips. The key distinction here is that the right 
  * side of the bar will fade into the background color.
  */
 
-// internal/GanttTimeline/TimelineBar.js
 import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * TimelineBar renders a single task bar within the Gantt chart timeline.
+ * TimelineBarGradientRight renders a single task bar within the Gantt chart timeline.
  * It handles the visual representation of a task with a defined start and end time.
  * 
  * @component
@@ -20,6 +19,8 @@ import PropTypes from 'prop-types';
  * @param {string} props.color - Color code for the task bar
  * @param {string} [props.label] - Optional text to display inside the bar
  * @param {string} [props.tooltipContent] - Content to show in tooltip on hover
+ * @param {Function} [props.onShowTooltip] - Handler for showing tooltip
+ * @param {Function} [props.onHideTooltip] - Handler for hiding tooltip
  */
 const TimelineBarGradientRight = ({
     item,
@@ -27,8 +28,22 @@ const TimelineBarGradientRight = ({
     width,
     color,
     label,
-    tooltipContent
+    tooltipContent,
+    onShowTooltip,
+    onHideTooltip
 }) => {
+    const handleMouseEnter = (e) => {
+        if (onShowTooltip && tooltipContent) {
+            onShowTooltip(e, tooltipContent);
+        }
+    };
+
+    const handleMouseLeave = (e) => {
+        if (onHideTooltip) {
+            onHideTooltip(e);
+        }
+    };
+
     return (
         <div
             className="dash-gantt-task-bar"
@@ -37,7 +52,8 @@ const TimelineBarGradientRight = ({
                 width: `${width}%`,
                 background: `linear-gradient(to right, ${color} 90%, transparent)`,
             }}
-            title={tooltipContent}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             <span className="dash-gantt-task-label">{label}</span>
         </div>
@@ -50,7 +66,9 @@ TimelineBarGradientRight.propTypes = {
     width: PropTypes.number.isRequired,
     color: PropTypes.string.isRequired,
     label: PropTypes.string,
-    tooltipContent: PropTypes.string
+    tooltipContent: PropTypes.string,
+    onShowTooltip: PropTypes.func,
+    onHideTooltip: PropTypes.func
 };
 
 export default TimelineBarGradientRight;

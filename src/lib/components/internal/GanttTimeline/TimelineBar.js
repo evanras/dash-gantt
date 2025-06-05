@@ -1,9 +1,8 @@
 /**
  * @fileoverview TimelineBar component renders individual task bars in the Gantt chart
- * with configurable positioning, colors, and tooltips.
+ * with configurable positioning, colors, and custom tooltips.
  */
 
-// internal/GanttTimeline/TimelineBar.js
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -19,6 +18,8 @@ import PropTypes from 'prop-types';
  * @param {string} props.color - Color code for the task bar
  * @param {string} [props.label] - Optional text to display inside the bar
  * @param {string} [props.tooltipContent] - Content to show in tooltip on hover
+ * @param {Function} [props.onShowTooltip] - Handler for showing tooltip
+ * @param {Function} [props.onHideTooltip] - Handler for hiding tooltip
  */
 const TimelineBar = ({
     item,
@@ -26,8 +27,22 @@ const TimelineBar = ({
     width,
     color,
     label,
-    tooltipContent  // TODO: maybe remove tooltip content, let that be handled by other components?
+    tooltipContent,
+    onShowTooltip,
+    onHideTooltip
 }) => {
+    const handleMouseEnter = (e) => {
+        if (onShowTooltip && tooltipContent) {
+            onShowTooltip(e, tooltipContent);
+        }
+    };
+
+    const handleMouseLeave = (e) => {
+        if (onHideTooltip) {
+            onHideTooltip(e);
+        }
+    };
+
     return (
         <div
             className="dash-gantt-task-bar"
@@ -36,7 +51,8 @@ const TimelineBar = ({
                 width: `${width}%`,
                 backgroundColor: color,
             }}
-            title={tooltipContent}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             <span className="dash-gantt-task-label">{label}</span>
         </div>
@@ -49,7 +65,9 @@ TimelineBar.propTypes = {
     width: PropTypes.number.isRequired,
     color: PropTypes.string.isRequired,
     label: PropTypes.string,
-    tooltipContent: PropTypes.string
+    tooltipContent: PropTypes.string,
+    onShowTooltip: PropTypes.func,
+    onHideTooltip: PropTypes.func
 };
 
 export default TimelineBar;

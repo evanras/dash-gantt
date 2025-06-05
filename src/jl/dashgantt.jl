@@ -68,7 +68,7 @@ Those elements have the following types:
   - `expanded` (Bool; optional)
 - `maxHeight` (String | Real; optional): Optional maximum height of the component
 - `startDate` (String; required): Required start date for the timeline
-- `styles` (optional): Optional custom styles for component parts. styles has the following type: lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskBar', 'timeCell', 'caretButton', 'currentTime'.
+- `styles` (optional): Optional custom styles for component parts. styles has the following type: lists containing elements 'container', 'header', 'jobs', 'timeline', 'taskBar', 'timeCell', 'caretButton', 'currentTime', 'tooltip'.
 Those elements have the following types:
   - `container` (Dict; optional)
   - `header` (Dict; optional)
@@ -78,6 +78,7 @@ Those elements have the following types:
   - `timeCell` (Dict; optional)
   - `caretButton` (Dict; optional)
   - `currentTime` (Dict; optional)
+  - `tooltip` (Dict; optional)
 - `timeScale` (optional): Required configuration for timeline scale and formatting. timeScale has the following type: lists containing elements 'unit', 'value', 'format'.
 Those elements have the following types:
   - `unit` (a value equal to: 'minutes', 'hours', 'days', 'weeks', 'months'; required)

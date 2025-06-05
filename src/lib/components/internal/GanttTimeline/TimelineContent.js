@@ -84,6 +84,8 @@ const mapLineData = (item) => {
  *   getItemColor={(item) => {...}}
  *   generateTooltip={(item) => {...}}
  *   expandedRows={{}}
+ *   onShowTooltip={(e, content) => {...}}
+ *   onHideTooltip={(e) => {...}}
  * />
  */
 const TimelineContent = ({
@@ -93,6 +95,8 @@ const TimelineContent = ({
     getItemColor,
     generateTooltip,
     expandedRows,
+    onShowTooltip,
+    onHideTooltip,
     level = 0
 }) => {
     if (!Array.isArray(items)) {
@@ -134,6 +138,8 @@ const TimelineContent = ({
                                 color={getItemColor(item)}
                                 label={item.label}
                                 tooltipContent={generateTooltip(item)}
+                                onShowTooltip={onShowTooltip}
+                                onHideTooltip={onHideTooltip}
                             />
                         )
                     ) : item.displayType === 'gradient' ? (
@@ -145,6 +151,8 @@ const TimelineContent = ({
                                 color={getItemColor(item)}
                                 label={item.label}
                                 tooltipContent={generateTooltip(item)}
+                                onShowTooltip={onShowTooltip}
+                                onHideTooltip={onHideTooltip}
                             />
                         )
                     ) : (
@@ -156,6 +164,8 @@ const TimelineContent = ({
                                 color={getItemColor(item)}
                                 label={item.label}
                                 tooltipContent={generateTooltip(item)}
+                                onShowTooltip={onShowTooltip}
+                                onHideTooltip={onHideTooltip}
                             />
                         )
                     )}
@@ -168,6 +178,8 @@ const TimelineContent = ({
                         getItemColor={getItemColor}
                         generateTooltip={generateTooltip}
                         expandedRows={expandedRows}
+                        onShowTooltip={onShowTooltip}
+                        onHideTooltip={onHideTooltip}
                         level={level + 1}
                     />
                 )}
@@ -247,6 +259,21 @@ TimelineContent.propTypes = {
     expandedRows: PropTypes.object.isRequired,
 
     /**
+     * Function to handle showing tooltips
+     * @type {Function}
+     * @param {Event} event - Mouse event
+     * @param {string} content - Tooltip content to display
+     */
+    onShowTooltip: PropTypes.func.isRequired,
+
+    /**
+     * Function to handle hiding tooltips
+     * @type {Function}
+     * @param {Event} event - Mouse event
+     */
+    onHideTooltip: PropTypes.func.isRequired,
+
+    /**
      * Current depth level in the hierarchy, used for indentation.
      * @type {number}
      * @default 0
@@ -261,47 +288,5 @@ TimelineContent.propTypes = {
 TimelineContent.defaultProps = {
     level: 0
 };
-
-/**
- * @component-notes
- * 
- * Key Features:
- * - Supports both bar and line chart visualizations
- * - Handles hierarchical data with recursive rendering
- * - Manages expanded/collapsed states for nested items
- * - Coordinates positioning and styling across different item types
- * - Provides robust data validation and error handling
- * 
- * Implementation Considerations:
- * - Uses React.Fragment to avoid unnecessary DOM nesting
- * - Conditionally renders different visualization components based on displayType
- * - Maintains consistent sizing and spacing through CSS classes
- * - Preserves hierarchy information through level prop
- * - Implements safe data mapping with validation
- * 
- * Integration Notes:
- * - Works in conjunction with DashGantt's main component
- * - Relies on parent component for position calculations
- * - Expects consistent data structure for items
- * - Handles both leaf nodes and parent nodes in the hierarchy
- * 
- * Error Handling:
- * - Validates input arrays and required properties
- * - Provides warning messages for invalid data
- * - Gracefully handles missing or malformed data
- * - Ensures safe rendering with null checks
- * 
- * Data Structure Requirements:
- * 1. Each item must have a unique 'id'
- * 2. Line chart items need matching 'dates' and 'values' arrays
- * 3. Bar chart items require valid 'start' and 'end' dates
- * 4. Optional 'children' array for nested items
- * 
- * Performance Optimization:
- * - Uses functional updates for state changes
- * - Implements conditional rendering
- * - Avoids unnecessary calculations
- * - Maintains flat structure for better React reconciliation
- */
 
 export default TimelineContent;
