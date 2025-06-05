@@ -64,6 +64,28 @@ const DashGantt = ({
     const jobsRef = useRef(null);
     const isScrolling = useRef(false);
     const resizeRef = useRef(null);
+    const mouseFollowRef = useRef(false);
+
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            // Only update tooltip position if it's visible and we're in follow mode
+            if (tooltip.visible && mouseFollowRef.current) {
+                setTooltip(prev => ({
+                    ...prev,
+                    x: e.clientX + 10,
+                    y: e.clientY + 10  
+                }));
+            }
+        };
+    
+        if (tooltip.visible) {
+            document.addEventListener('mousemove', handleMouseMove);
+        }
+    
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [tooltip.visible]);
 
     // Update the expanded rows when the prop value is changed
     useEffect(() => {
@@ -254,9 +276,12 @@ const DashGantt = ({
      * @param {string} content - Tooltip content
      */
     const handleShowTooltip = (e, content) => {
+        // Enable mouse following
+        mouseFollowRef.current = true;
+        
         // Position tooltip near cursor but slightly offset
         const x = e.clientX + 10;
-        const y = e.clientY + 10;
+        const y = e.clientY + 10; 
         setTooltip({ content, visible: true, x, y });
     };
 
@@ -264,6 +289,8 @@ const DashGantt = ({
      * Handles hiding the tooltip
      */
     const handleHideTooltip = () => {
+        // Disable mouse following
+        mouseFollowRef.current = false;
         setTooltip(prev => ({ ...prev, visible: false }));
     };
 
