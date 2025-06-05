@@ -450,19 +450,22 @@ const DashGantt = ({
             <div 
                 ref={tooltipRef}
                 className={`dash-gantt-tooltip ${tooltip.visible ? 'visible' : ''}`}
-                style={{ display: tooltip.visible ? 'block' : 'none', ...(styles?.tooltip || {
-                    position: 'fixed',
+                style={{ 
+                    display: tooltip.visible ? 'block' : 'none',
                     left: `${tooltip.x}px`,
                     top: `${tooltip.y}px`,
-                    backgroundColor: 'rgb(242, 241, 241)',
-                    color: 'black',
-                    padding: '4px 8px',
-                    borderRadius: '0',
-                    fontSize: '0.8rem',
-                    pointerEvents: 'none',
-                    zIndex: 1000,
-                    whiteSpace: 'pre-line',
-                }) }}
+                    ...(styles?.tooltip || {
+                        position: 'fixed',
+                        backgroundColor: 'rgb(242, 241, 241)',
+                        color: 'black',
+                        padding: '4px 8px',
+                        borderRadius: '0',
+                        fontSize: '0.8rem',
+                        pointerEvents: 'none',
+                        zIndex: 1000,
+                        whiteSpace: 'pre-line',
+                    })
+                }}
             >
                 {tooltip.content}
             </div>
