@@ -140,6 +140,8 @@ Keyword arguments:
 
     - currentTime (dict; optional)
 
+    - tooltip (dict; optional)
+
 - timeScale (dict; default {    unit: 'hours',    value: 1,    format: 'HH:mm'}):
     Required configuration for timeline scale and formatting.
 
