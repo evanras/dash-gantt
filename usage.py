@@ -328,6 +328,15 @@ app.layout = html.Div([
                     "container": {"color": "black"},
                     "currentTime": {"backgroundColor": "transparent", "border-left": "2px dotted black"},
                     "timeCell": {"text-align": "center", "backgroundColor": "#f8fafc", "color": "white", "background": "black"},
+                    "tooltip": {
+                        "backgroundColor": 'rgb(242, 241, 241)',
+                        "color": 'black',
+                        "padding": '4px 8px',
+                        "borderRadius": '4px',
+                        "fontSize": '1.8rem',
+                        "pointerEvents": 'none',
+                        "zIndex": "1000,"
+                    }
                 },
             ),
         ]
