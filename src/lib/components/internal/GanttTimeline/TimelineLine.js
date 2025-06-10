@@ -12,6 +12,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { LineChart, Line, YAxis, ResponsiveContainer, Area, AreaChart, Tooltip, XAxis } from 'recharts';
 
 /**
@@ -91,8 +92,8 @@ const TimelineLine = ({
                     {/* Recharts tooltip with proper z-index and styling */}
                     {tooltipEnabled && (
                         <Tooltip
-                            labelFormatter={(value) => `Date: ${value}`}
-                            formatter={(value) => [`${value}`, 'Value']}
+                            labelFormatter={(value) => `Date: ${moment(value).format("MM-DD-YYYY HH:mm:ss")}`}
+                            formatter={(value) => [`${value}%`, 'Value']}
                             cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: '3 3' }}
                             animationDuration={0}
                             wrapperStyle={{ 
