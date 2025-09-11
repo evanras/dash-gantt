@@ -58,6 +58,7 @@ const DashGantt = ({
     const [tooltip, setTooltip] = useState({ content: '', visible: false, x: 0, y: 0 });
     const [jobsPanelWidth, setJobsPanelWidth] = useState(250);
     const [isResizing, setIsResizing] = useState(false);
+    const [hoveredItem, setHoveredItem] = useState(null);
 
     const tooltipRef = useRef(null);
     const timelineRef = useRef(null);
@@ -86,6 +87,50 @@ const DashGantt = ({
             document.removeEventListener('mousemove', handleMouseMove);
         };
     }, [tooltip.visible]);
+
+    // useEffect for keyboard event handling to copy hovered items 
+    useEffect(() => {
+        const handleKeyDown = async (e) => {
+            // Check for Cmd+C (Mac) or Ctrl+C (Windows/Linux)
+            const isCopyCommand = (e.metaKey || e.ctrlKey) && e.key === 'c';
+
+            if (isCopyCommand && hoveredItem && tooltip.visible) {
+                try {
+                    // Generate the tooltip content for the hovered item
+                    const tooltipContent = generateTooltip(hoveredItem);
+
+                    // Copy to clipboard
+                    await navigator.clipboard.writeText(tooltipContent);
+
+                    // Prevent default copy behavior
+                    e.preventDefault();
+                } catch (err) {
+                    console.error('Failed to copy tooltip content:', err);
+
+                    // Fallback for older browsers or permission issues
+                    try {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = generateTooltip(hoveredItem);
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        console.log('Tooltip content copied via fallback method');
+                    } catch (fallbackErr) {
+                        console.error('Fallback copy method also failed:', fallbackErr);
+                    }
+                }
+            }
+        };
+
+        // Add event listener when component mounts
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup when component unmounts
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [hoveredItem, tooltip.visible, generateTooltip]);
 
     // Update the expanded rows when the prop value is changed
     useEffect(() => {
@@ -275,7 +320,7 @@ const DashGantt = ({
      * @param {Event} e - Mouse event
      * @param {string} content - Tooltip content
      */
-    const handleShowTooltip = (e, content) => {
+    const handleShowTooltip = (e, content, item) => {
         // Enable mouse following
         mouseFollowRef.current = true;
 
@@ -283,6 +328,9 @@ const DashGantt = ({
         const x = e.clientX + 10;
         const y = e.clientY + 10;
         setTooltip({ content, visible: true, x, y });
+
+        // Track which item is being hovered for copy functionality
+        setHoveredItem(item);
     };
 
     /**
@@ -292,6 +340,9 @@ const DashGantt = ({
         // Disable mouse following
         mouseFollowRef.current = false;
         setTooltip(prev => ({ ...prev, visible: false }));
+
+        // Clear hovered item
+        setHoveredItem(null);
     };
 
     /**
@@ -371,8 +422,9 @@ const DashGantt = ({
                     <span
                         className="dash-gantt-job-name"
                         onClick={() => scrollToJob(item)}
-                        onMouseEnter={(e) => handleShowTooltip(e, generateTooltip(item))}
+                        onMouseEnter={(e) => handleShowTooltip(e, generateTooltip(item), item)}
                         onMouseLeave={handleHideTooltip}
+                        style={{ cursor: item.start && item.end ? 'pointer' : 'default' }}
                     >
                         {item.name}
                     </span>

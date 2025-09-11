@@ -33,7 +33,7 @@ const TimelineBar = ({
 }) => {
     const handleMouseEnter = (e) => {
         if (onShowTooltip && tooltipContent) {
-            onShowTooltip(e, tooltipContent);
+            onShowTooltip(e, tooltipContent, item);
         }
     };
 
