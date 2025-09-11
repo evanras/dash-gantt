@@ -58,6 +58,7 @@ const DashGantt = ({
     const [tooltip, setTooltip] = useState({ content: '', visible: false, x: 0, y: 0 });
     const [jobsPanelWidth, setJobsPanelWidth] = useState(250);
     const [isResizing, setIsResizing] = useState(false);
+    const [hoveredItem, setHoveredItem] = useState(null);
 
     const tooltipRef = useRef(null);
     const timelineRef = useRef(null);
@@ -73,19 +74,63 @@ const DashGantt = ({
                 setTooltip(prev => ({
                     ...prev,
                     x: e.clientX + 10,
-                    y: e.clientY + 10  
+                    y: e.clientY + 10
                 }));
             }
         };
-    
+
         if (tooltip.visible) {
             document.addEventListener('mousemove', handleMouseMove);
         }
-    
+
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
         };
     }, [tooltip.visible]);
+
+    // useEffect for keyboard event handling to copy hovered items 
+    useEffect(() => {
+        const handleKeyDown = async (e) => {
+            // Check for Cmd+C (Mac) or Ctrl+C (Windows/Linux)
+            const isCopyCommand = (e.metaKey || e.ctrlKey) && e.key === 'c';
+
+            if (isCopyCommand && hoveredItem && tooltip.visible) {
+                try {
+                    // Generate the tooltip content for the hovered item
+                    const tooltipContent = generateTooltip(hoveredItem);
+
+                    // Copy to clipboard
+                    await navigator.clipboard.writeText(tooltipContent);
+
+                    // Prevent default copy behavior
+                    e.preventDefault();
+                } catch (err) {
+                    console.error('Failed to copy tooltip content:', err);
+
+                    // Fallback for older browsers or permission issues
+                    try {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = generateTooltip(hoveredItem);
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        console.log('Tooltip content copied via fallback method');
+                    } catch (fallbackErr) {
+                        console.error('Fallback copy method also failed:', fallbackErr);
+                    }
+                }
+            }
+        };
+
+        // Add event listener when component mounts
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup when component unmounts
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [hoveredItem, tooltip.visible, generateTooltip]);
 
     // Update the expanded rows when the prop value is changed
     useEffect(() => {
@@ -96,11 +141,11 @@ const DashGantt = ({
     useEffect(() => {
         const handleMouseMove = (e) => {
             if (!isResizing) return;
-            
+
             // Calculate new width, with min and max constraints
             const newWidth = Math.max(150, Math.min(800, e.clientX));
             setJobsPanelWidth(newWidth);
-            
+
             // Prevent text selection during resize
             e.preventDefault();
         };
@@ -139,14 +184,14 @@ const DashGantt = ({
     // Function to handle synchronized scrolling
     const handleScroll = (event) => {
         if (isScrolling.current) return;
-        
+
         try {
             isScrolling.current = true;
             const { scrollTop, scrollLeft } = event.target;
-            
+
             // Determine which container triggered the scroll
             const isTimelineScroll = event.target === timelineRef.current?.querySelector('.dash-gantt-timeline-scroll');
-            
+
             if (isTimelineScroll) {
                 // Timeline was scrolled, sync jobs panel
                 if (jobsRef.current) {
@@ -177,7 +222,7 @@ const DashGantt = ({
                 const timelineScroll = timelineRef.current.querySelector('.dash-gantt-timeline-scroll');
                 if (timelineScroll) {
                     timelineScroll.scrollTop = jobsRef.current.scrollTop;
-                    
+
                     // On initial load, scroll to the right
                     if (timelineScroll.scrollLeft === 0 && timelineScroll.scrollWidth > timelineScroll.clientWidth) {
                         timelineScroll.scrollLeft = timelineScroll.scrollWidth - timelineScroll.clientWidth;
@@ -203,10 +248,10 @@ const DashGantt = ({
             ...expandedRows,
             [id]: !expandedRows[id]
         };
-        
+
         // Update internal React state
         setExpandedRows(newExpandedRows);
-        
+
         // Send data back to Dash
         if (setProps) {
             setProps({
@@ -275,14 +320,17 @@ const DashGantt = ({
      * @param {Event} e - Mouse event
      * @param {string} content - Tooltip content
      */
-    const handleShowTooltip = (e, content) => {
+    const handleShowTooltip = (e, content, item) => {
         // Enable mouse following
         mouseFollowRef.current = true;
-        
+
         // Position tooltip near cursor but slightly offset
         const x = e.clientX + 10;
-        const y = e.clientY + 10; 
+        const y = e.clientY + 10;
         setTooltip({ content, visible: true, x, y });
+
+        // Track which item is being hovered for copy functionality
+        setHoveredItem(item);
     };
 
     /**
@@ -292,6 +340,43 @@ const DashGantt = ({
         // Disable mouse following
         mouseFollowRef.current = false;
         setTooltip(prev => ({ ...prev, visible: false }));
+
+        // Clear hovered item
+        setHoveredItem(null);
+    };
+
+    /**
+     * Handles scrolling to the job bar when clicking on the title 
+     */
+    const scrollToJob = (item) => {
+        // Only scroll for items that have timeline bars (start/end dates)
+        if (!item.start || !item.end) return;
+
+        // Get the timeline scroll container
+        const timelineScrollContainer = timelineRef.current?.querySelector('.dash-gantt-timeline-scroll');
+
+        if (!timelineScrollContainer) return;
+
+        // Calculate the position of the job's start as a percentage
+        const startPosition = calculatePosition(item.start);
+
+        // Convert percentage to actual pixel position
+        const targetScrollLeft = (startPosition / 100) * totalWidth;
+
+        // Get the maximum scrollable distance
+        const maxScrollLeft = timelineScrollContainer.scrollWidth - timelineScrollContainer.clientWidth;
+
+        // Clamp the target scroll position to valid bounds
+        const clampedScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScrollLeft));
+
+        // Smooth scroll to the clamped position
+        timelineScrollContainer.scrollTo({
+            left: clampedScrollLeft,
+            behavior: 'smooth'
+        });
+
+        // Update the scroll state to keep header in sync
+        setScrollLeft(clampedScrollLeft);
     };
 
     /**
@@ -304,41 +389,49 @@ const DashGantt = ({
      */
     const renderJobTitle = (item, level) => (
         <div className="dash-gantt-job-title">
-            <div 
+            <div
                 className="dash-gantt-job-content"
                 data-level={level}
+            >
+                {/* Caret container - always present for consistent spacing */}
+                <div className="dash-gantt-caret-container">
+                    {item.children && (
+                        <button
+                            onClick={() => toggleRow(item.id)}
+                            className="dash-gantt-caret"
+                            aria-label={expandedRows[item.id] ? "Collapse" : "Expand"}
                         >
-                            {/* Caret container - always present for consistent spacing */}
-                            <div className="dash-gantt-caret-container">
-                                {item.children && (
-                                    <button
-                                        onClick={() => toggleRow(item.id)}
-                                        className="dash-gantt-caret"
-                                        aria-label={expandedRows[item.id] ? "Collapse" : "Expand"}
-                                    >
-                                        {expandedRows[item.id] ? '▼' : '►'}
-                                    </button>
-                                )}
-                            </div>
+                            {expandedRows[item.id] ? '▼' : '►'}
+                        </button>
+                    )}
+                </div>
 
-                            {/* Content wrapper for job name and icon */}
-                            <div className="dash-gantt-job-content-wrapper">
-                                {item.icon && (
-                                    item.icon.match(/\.(jpeg|jpg|gif|png|svg|webp)$/) ? (
-                                        <img 
-                                            src={item.icon} 
-                                            alt="" 
-                                            className="dash-gantt-job-icon"
-                                        />
-                                    ) : (
-                                        <div className={`dash-gantt-job-icon ${item.icon}`}></div>
-                                    )
-                                )}
-                                <span className="dash-gantt-job-name">{item.name}</span>
-                            </div>
-                        </div>
-                    </div>
-                );
+                {/* Content wrapper for job name and icon */}
+                <div className="dash-gantt-job-content-wrapper">
+                    {item.icon && (
+                        item.icon.match(/\.(jpeg|jpg|gif|png|svg|webp)$/) ? (
+                            <img
+                                src={item.icon}
+                                alt=""
+                                className="dash-gantt-job-icon"
+                            />
+                        ) : (
+                            <div className={`dash-gantt-job-icon ${item.icon}`}></div>
+                        )
+                    )}
+                    <span
+                        className="dash-gantt-job-name"
+                        onClick={() => scrollToJob(item)}
+                        onMouseEnter={(e) => handleShowTooltip(e, generateTooltip(item), item)}
+                        onMouseLeave={handleHideTooltip}
+                        style={{ cursor: item.start && item.end ? 'pointer' : 'default' }}
+                    >
+                        {item.name}
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
 
     /**
      * Recursively renders the hierarchical job list.
@@ -353,7 +446,7 @@ const DashGantt = ({
                 <div className="dash-gantt-job-row">
                     {renderJobTitle(item, level)}
                 </div>
-                {item.children && expandedRows[item.id] && 
+                {item.children && expandedRows[item.id] &&
                     renderHierarchicalData(item.children, level + 1)}
             </React.Fragment>
         ));
@@ -366,7 +459,7 @@ const DashGantt = ({
     const renderCurrentTimeLine = () => {
         if (!currentTime) return null;
         return (
-            <div 
+            <div
                 className="dash-gantt-current-time"
                 style={{ left: `${currentTimePosition}%`, ...(styles?.currentTime || {}) }}
             />
@@ -382,8 +475,8 @@ const DashGantt = ({
     const totalWidth = intervals.length * columnWidth;
 
     return (
-        <div 
-            id={id} 
+        <div
+            id={id}
             className={`dash-gantt ${classNames?.container || ''}`}
             style={{ maxHeight, ...(styles?.container || {}) }}
         >
@@ -398,10 +491,10 @@ const DashGantt = ({
                 titleWidth={jobsPanelWidth}
                 styles={styles}
             />
-            
+
             <div className="dash-gantt-content">
                 {/* Jobs panel */}
-                <div 
+                <div
                     ref={jobsRef}
                     className="dash-gantt-jobs"
                     onScroll={handleScroll}
@@ -419,15 +512,15 @@ const DashGantt = ({
                 />
 
                 {/* Timeline section */}
-                <div 
+                <div
                     ref={timelineRef}
                     className="dash-gantt-timeline"
                 >
-                    <div 
+                    <div
                         className="dash-gantt-timeline-scroll"
                         onScroll={handleScroll}
                     >
-                        <div 
+                        <div
                             className="dash-gantt-timeline-wrapper"
                             style={{ width: totalWidth }}
                         >
@@ -447,10 +540,10 @@ const DashGantt = ({
                 </div>
             </div>
             {/* Tooltip */}
-            <div 
+            <div
                 ref={tooltipRef}
                 className={`dash-gantt-tooltip ${tooltip.visible ? 'visible' : ''}`}
-                style={{ 
+                style={{
                     display: tooltip.visible ? 'block' : 'none',
                     left: `${tooltip.x}px`,
                     top: `${tooltip.y}px`,

@@ -17,7 +17,7 @@ data = [
         "name": "Source Data Analysis",
         "icon": "bi bi-1-circle",
         "status": "completed",
-        "start": "2023-10-01 14:00",
+        "start": "2023-10-01 12:00",
         "end": "2023-10-01 14:30",
         "label": "Data Analysis",
         "progress": 100
@@ -341,7 +341,7 @@ app.layout = html.Div([
                 id='gantt-chart',
                 data=data,
                 title="Jobs",
-                startDate="2023-10-01 14:00",
+                startDate="2023-10-01 11:00",
                 endDate="2023-10-01 20:12",
                 currentTime=current_time,  # Vertical line at 3 PM
                 timeScale={
