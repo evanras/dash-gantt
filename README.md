@@ -1,98 +1,262 @@
 # DashGantt
 
-DashGantt is a Dash component library.
+DashGantt is a Dash component library allowing developers to seemlessly create Gantt charts. 
 
-Create beautiful Gantt charts in Dash.
+https://github.com/user-attachments/assets/828abb60-551c-4a2a-84ed-c45be1d15e1c
 
-Get started with:
-1. Install Dash and its dependencies: https://dash.plotly.com/installation
-2. Run `python usage.py`
-3. Visit http://localhost:8050 in your web browser
+## Installation
+```python
+pip install dash-gantt
+```
 
-## Contributing
+## Usage
+```python
+data = [
+    {
+        "id": "source_analysis",
+        "name": "Source Data Analysis",
+        "icon": "bi bi-1-circle",
+        "status": "completed",
+        "start": "2023-10-01 12:00",
+        "end": "2023-10-01 14:30",
+        "label": "Data Analysis",
+        "progress": 100
+    },
+    {
+        "id": "job id = 1, data_load",
+        "name": "Data Load",
+        "icon": "https://img.icons8.com/?size=100&id=bQUXBvTNh8MI&format=png&color=000000.png",
+        "start": "2023-10-01 14:11",
+        "end": "2023-10-01 14:52",
+        "status": "failed",
+        "label": "Data Load",
+        "children": [
+            {
+                "id": "tak orchestrator, task id =1 ",
+                "name": "Extract",
+                "status": "completed",
+                "start": "2023-10-01 14:11",
+                "end": "2023-10-01 14:37",
+                "label": "Extraction"
+            },
+            {
+                "id": "second_one",
+                "name": "second one",
+                "status": "failed",
+                "start": "2023-10-01 14:28",
+                "end": "2023-10-01 14:52",  # TODO: time is not 
+                "label": "Second One",
+                "children": [
+                    {
+                        "id": "tak asdforchestrator, task id =1 ",
+                        "name": "Extract",
+                        "status": "completed",
+                        "start": "2023-10-01 14:11",
+                        "end": "2023-10-01 14:37",
+                        "label": "Extraction"
+                    },
+                    {
+                        "id": "sedfsdcond_one",
+                        "name": "second one",
+                        "status": "failed",
+                        "start": "2023-10-01 14:28",
+                        "end": "2023-10-01 14:52",  # TODO: time is not 
+                        "label": "Second One"
+                    }
+                ]   
+            }
+        ]
+    },
+    {
+        "id": "pipeline",
+        "name": "Pipeline",
+        "status": "running",
+        "start": "2023-10-01 15:45",
+        "end": current_time, 
+        "label": "Pipeline",
+        "displayType": "gradient-right"
+    },
+    {
+        "id": "queued_job",
+        "name": "Queued Job",
+        "status": "queued",
+        "start": current_time,
+        "end": "2023-10-01 19:06",
+        "displayType": "gradient"
+    },
+    {
+        "id": "seasdcond_one",
+        "name": "second one",
+        "status": "failed",
+        "start": "2023-10-01 14:28",
+        "end": "2023-10-01 14:52",  # TODO: time is not 
+        "label": "Second One",
+        "children": [
+            {
+                "id": "tak asdfosdfrchestrator, task id =1 ",
+                "name": "Extract",
+                "status": "completed",
+                "start": "2023-10-01 14:11",
+                "end": "2023-10-01 14:37",
+                "label": "Extraction"
+            },
+            {
+                "id": "sedfsdascond_one",
+                "name": "second one",
+                "status": "failed",
+                "start": "2023-10-01 14:28",
+                "end": "2023-10-01 14:52",  # TODO: time is not 
+                "label": "Second One"
+            }
+        ]   
+    },
+    {
+        "id": "memory_usage",
+        "name": "Memory Usage",
+        "displayType": "line",
+        "dates": [
+            "2023-10-01 14:00", "2023-10-01 14:05", "2023-10-01 14:10", "2023-10-01 14:15", "2023-10-01 14:20",
+            "2023-10-01 14:25", "2023-10-01 14:30", "2023-10-01 14:35", "2023-10-01 14:40", "2023-10-01 14:45", 
+            "2023-10-01 14:50",
+        ],
+        "values": [
+            20, 35, 56, 40, 45,
+            75, 95, 87, 38, 12,
+            44
+        ],
+        "color": "black",
+        "fill": {
+            "enabled": True,
+            "gradient": {
+                "startOpacity": 1,
+                "endOpacity": 0.01
+            }
+        },
+        "children": [
+            {
+                "id": "bot 1 memory usage",
+                "name": "Memory Usage of Bot 1",
+                "displayType": "line",
+                "dates": [
+                    dt.datetime(2023, 10, 1, 14, 0),
+                    dt.datetime(2023, 10, 1, 14, 5),
+                    dt.datetime(2023, 10, 1, 14, 10),
+                    dt.datetime(2023, 10, 1, 14, 15),
+                    dt.datetime(2023, 10, 1, 14, 20),
+                    dt.datetime(2023, 10, 1, 14, 25),
+                    dt.datetime(2023, 10, 1, 14, 30),
+                    dt.datetime(2023, 10, 1, 14, 35),
+                    dt.datetime(2023, 10, 1, 14, 40),
+                    dt.datetime(2023, 10, 1, 14, 45),
+                    dt.datetime(2023, 10, 1, 14, 50),
+                    dt.datetime(2023, 10, 1, 14, 55),
+                    dt.datetime(2023, 10, 1, 15, 0),
+                    dt.datetime(2023, 10, 1, 15, 45),
+                    dt.datetime(2023, 10, 1, 15, 50),
+                    dt.datetime(2023, 10, 1, 15, 55),
+                    dt.datetime(2023, 10, 1, 16, 5)
+                ],
+                "values": [
+                    40, 25, 36, 10,
+                    35, 45, 95, 79,
+                    41, 2, 4, 4, 12,
+                    36, 58, 39, 89
+                ],
+                "color": "blue",
+                "fill": {
+                    "enabled": True,
+                    "gradient": {
+                        "startOpacity": 0.5,
+                        "endOpacity": 0
+                    }
+                }
+            }
+        ]
+    },
+    {
+        'id': 'telemetry-memory-usage',
+        'name': 'Memory Usage', 
+        'displayType': 'line', 
+        "dates": [
+                    dt.datetime(2023, 10, 1, 14, 0),
+                    dt.datetime(2023, 10, 1, 14, 5),
+                    dt.datetime(2023, 10, 1, 14, 10),
+                    dt.datetime(2023, 10, 1, 14, 15),
+                    dt.datetime(2023, 10, 1, 14, 20),
+                    dt.datetime(2023, 10, 1, 14, 25),
+                    dt.datetime(2023, 10, 1, 14, 30),
+                    dt.datetime(2023, 10, 1, 14, 35),
+                    dt.datetime(2023, 10, 1, 14, 40),
+                    dt.datetime(2023, 10, 1, 14, 45),
+                    dt.datetime(2023, 10, 1, 14, 50),
+                    dt.datetime(2023, 10, 1, 14, 55),
+                    dt.datetime(2023, 10, 1, 15, 0),
+                    dt.datetime(2023, 10, 1, 15, 45),
+                    dt.datetime(2023, 10, 1, 15, 50),
+                    dt.datetime(2023, 10, 1, 15, 55),
+                    dt.datetime(2023, 10, 1, 16, 5)
+                ],
+        "values": [
+            60, 25, 16, 32,
+            35, 45, 15, 99,
+            46, 2, 4, 54, 12,
+            36, 78, 59, 89
+        ],
+        'color': '#007bff', 
+        'fill': {'enabled': True, 'gradient': {'startOpacity': 1, 'endOpacity': 0.1}}, 
+        'children': None
+    }
+]
+app.layout = html.Div([
+    dcc.Interval(id="interval", interval=65 * 10),
+    html.Div(
+        id="gantt-container",
+        children=[
+            dash_gantt.DashGantt(
+                id='gantt-chart',
+                data=data,
+                title="Jobs",
+                startDate="2023-10-01 11:00",
+                endDate="2023-10-01 20:12",
+                currentTime=current_time,  # Vertical line at 3 PM
+                timeScale={
+                    "unit": "minutes",
+                    "value": 30,
+                    "format": "DD/MM HH:mm"
+                },
+                colorMapping={
+                    "key": "status",
+                    "map": {
+                        "completed": "#4CAF50",  # Green
+                        "in_progress": "#FFA726", # Orange
+                        "running": "#2196F3",     # Blue
+                        "failed": "red",
+                        "queued": "gray"
+                    }
+                },
+                tooltipFields=["status", "progress", "start", "end"],
+                columnWidth=100,
+                maxHeight="600px",
+                styles={
+                    "currentTime": {"backgroundColor": "transparent", "border-left": "2px dotted black"},
+                    "timeCell": {"text-align": "center", "backgroundColor": "#f8fafc"},
+                    "tooltip": {
+                        "backgroundColor": 'rgb(242, 241, 241)',
+                        "color": 'black',
+                        "padding": '4px 8px',
+                        "borderRadius": '4px',
+                        "fontSize": '1.2rem',
+                        "pointerEvents": 'none',
+                        "zIndex": "1000,"
+                    }
+                },
+            ),
+        ]
+    )
+])
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
+if __name__ == '__main__':
+    app.run(debug=False)
+```
 
-### Install dependencies
-
-If you have selected install_dependencies during the prompt, you can skip this part.
-
-1. Install npm packages
-    ```
-    $ npm install
-    ```
-2. Create a virtual env and activate.
-    ```
-    $ virtualenv venv
-    $ . venv/bin/activate
-    ```
-    _Note: venv\Scripts\activate for windows_
-
-3. Install python packages required to build components.
-    ```
-    $ pip install -r requirements.txt
-    ```
-4. Install the python packages for testing (optional)
-    ```
-    $ pip install -r tests/requirements.txt
-    ```
-
-### Write your component code in `src/lib/components/DashGantt.react.js`.
-
-- The demo app is in `src/demo` and you will import your example component code into your demo app.
-- Test your code in a Python environment:
-    1. Build your code
-        ```
-        $ npm run build
-        ```
-    2. Run and modify the `usage.py` sample dash app:
-        ```
-        $ python usage.py
-        ```
-- Write tests for your component.
-    - A sample test is available in `tests/test_usage.py`, it will load `usage.py` and you can then automate interactions with selenium.
-    - Run the tests with `$ pytest tests`.
-    - The Dash team uses these types of integration tests extensively. Browse the Dash component code on GitHub for more examples of testing (e.g. https://github.com/plotly/dash-core-components)
-- Add custom styles to your component by putting your custom CSS files into your distribution folder (`dash_gantt`).
-    - Make sure that they are referenced in `MANIFEST.in` so that they get properly included when you're ready to publish your component.
-    - Make sure the stylesheets are added to the `_css_dist` dict in `dash_gantt/__init__.py` so dash will serve them automatically when the component suite is requested.
-- [Review your code](./review_checklist.md)
-
-### Create a production build and publish:
-
-1. Build your code:
-    ```
-    $ npm run build
-    ```
-2. Create a Python distribution
-    ```
-    $ python setup.py sdist bdist_wheel
-    ```
-    This will create source and wheel distribution in the generated the `dist/` folder.
-    See [PyPA](https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project)
-    for more information.
-
-3. Test your tarball by copying it into a new environment and installing it locally:
-    ```
-    $ pip install dash_gantt-0.0.1.tar.gz
-    ```
-
-4. If it works, then you can publish the component to NPM and PyPI:
-    1. Publish on PyPI
-        ```
-        $ twine upload dist/*
-        ```
-    2. Cleanup the dist folder (optional)
-        ```
-        $ rm -rf dist
-        ```
-    3. Publish on NPM (Optional if chosen False in `publish_on_npm`)
-        ```
-        $ npm publish
-        ```
-        _Publishing your component to NPM will make the JavaScript bundles available on the unpkg CDN. By default, Dash serves the component library's CSS and JS locally, but if you choose to publish the package to NPM you can set `serve_locally` to `False` and you may see faster load times._
-
-5. Share your component with the community! https://community.plotly.com/c/dash
-    1. Publish this repository to GitHub
-    2. Tag your GitHub repository with the plotly-dash tag so that it appears here: https://github.com/topics/plotly-dash
-    3. Create a post in the Dash community forum: https://community.plotly.com/c/dash
+Developers can customize the time granularity, tooltips, data hierarchies, styles, and much more using the dash-gantt library. 
