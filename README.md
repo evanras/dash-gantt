@@ -2,6 +2,8 @@
 
 DashGantt is a Dash component library allowing developers to seemlessly create Gantt charts. 
 
+https://github.com/user-attachments/assets/828abb60-551c-4a2a-84ed-c45be1d15e1c
+
 ## Installation
 ```python
 pip install dash-gantt
