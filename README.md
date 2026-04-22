@@ -1,6 +1,7 @@
 # DashGantt
 
 DashGantt is a Dash component library allowing developers to seemlessly create Gantt charts. 
+
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/dash-gantt?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/dash-gantt)
 
 https://github.com/user-attachments/assets/828abb60-551c-4a2a-84ed-c45be1d15e1c
